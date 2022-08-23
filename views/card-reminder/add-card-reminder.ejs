@@ -1,0 +1,68 @@
+<%- include('../layouts/main-layout.ejs') %>
+
+    <main>
+    <div class="container">
+      <div class="row">
+          <form action="/cards/add-billreminder" method="POST">
+            <div class="mb-3">
+              <label for="cardnumber" class="form-label">Bank Name</label>
+              <select class="form-select" aria-label="Default select example" name="cardbankname" id="cardbankname">
+                <option value='0' selected>Select your bank</option>
+                <option value="1">HDFC</option>
+                <option value="2">ICICI</option>
+                <option value="3">AU Bank</option>
+                <option value="4">Bank of Baroda</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="cardname" class="form-label">Credit Card Name</label>
+              <input type="text" class="form-control" id="cardname" name="cardname" aria-describedby="cardname" >
+              <div id="emailHelp" class="form-text">We'll never share your card with anyone else.</div>
+            </div>
+            <div class="mb-3">
+              <label for="cardnumber" class="form-label">Credit Card Number</label>
+              <input type="text" class="form-control" id="cardnumber" name="cardnumber" aria-describedby="cardnumber" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57" onpaste="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
+              <div id="emailHelp" class="form-text">We'll never share your card with anyone else.</div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Expiry Date</label>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Month" id="cardexpirymonth" name="cardexpirymonth" aria-label="Month" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
+              <input type="text" class="form-control" placeholder="Year" id="cardexpiryyear" name="cardexpiryyear" aria-label="Year" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
+            </div>
+            <div class="mb-3">
+              <label for="cardrewardrate" class="form-label">Reward Rate (Optional)</label>
+              <input type="text" class="form-control" id="cardrewardrate" name="cardrewardrate" aria-describedby="cardrewardrate">
+            </div>
+            <div class="mb-3">
+              <label for="cardcharges" class="form-label">Yearly Charges</label>
+              <input type="text" class="form-control" id="cardcharges" name="cardcharges" aria-describedby="cardcharges">
+            </div>
+            <div class="mb-3">
+              <label for="cardlimit" class="form-label">Limit</label>
+              <input type="text" class="form-control" id="cardlimit" name="cardlimit" aria-describedby="cardlimit">
+            </div> 
+            <div class="mb-3">
+              <label for="cardbillgendate" class="form-label">Bill Generation Date</label>
+              <input type="date" class="form-control" id="cardbillgendate" name="cardbillgendate" aria-describedby="cardbillgendate">
+            </div> 
+            <div class="mb-3">
+              <label for="cardduedate" class="form-label">Due Date</label>
+              <input type="date" class="form-control" id="cardduedate" name="cardduedate" aria-describedby="cardduedate">
+            </div>
+            <div class="mb-3">
+              <label for="cardcibildate" class="form-label">CIBIL Reporting Date (Optional)</label>
+              <input type="text" class="form-control" id="cardcibildate" name="cardcibildate" aria-describedby="cardcibildate">
+            </div>    
+              
+              
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+
+      </div>
+    </div>
+    
+
+  </main>
+
+<%- include('../layouts/footer.ejs') %></div>
