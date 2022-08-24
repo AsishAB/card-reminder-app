@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 
 const mongoURL = require("./helpers/gitignores/mongodburl");
 const billReminderRoutes = require("./routes/billRoute");
+const userRoutes = require("./routes/userRoutes");
+const bankRoutes = require("./routes/bankRoutes");
 const rootDir = require("./helpers/user-defined-path");
 const HtmlError = require("./controllers/HtmlErrorController");
 
@@ -23,8 +25,14 @@ app.set("views", [
 ]);
 
 app.use("/cards", billReminderRoutes);
+app.use("/users", userRoutes);
+app.use("/bank", bankRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+	"/bank_images",
+	express.static(path.join(__dirname, "public/file_uploads/bank_images"))
+);
 
 app.use(HtmlError.get404Page); //To display 404 page
 app.use("/500", HtmlError.get500Page); //To display 500 page

@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const cardReminderSchema = new Schema(
 	{
 		TCR_BankName: {
-			type: String,
+			type: Schema.Types.ObjectId,
+			ref: "Banks",
 			required: true,
 		},
 		TCR_CardName: {
@@ -21,6 +22,10 @@ const cardReminderSchema = new Schema(
 			required: true,
 		},
 		TCR_CardExpiryYear: {
+			type: String,
+			required: true,
+		},
+		TCR_CardSecretCode: {
 			type: String,
 			required: true,
 		},
@@ -43,8 +48,17 @@ const cardReminderSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		TCR_CardBillDueDate: {
+		TCR_CardCIBILReportingDate: {
 			type: String,
+		},
+		TCR_CardCreatedBy: {
+			type: Schema.Types.ObjectId,
+			ref: "User", //The User Model. Has to be same as the model. Only available in Mongoose
+			required: true,
+		},
+		TCR_CardUpdatedBy: {
+			type: Schema.Types.ObjectId,
+			ref: "User", //The User Model. Has to be same as the model. Only available in Mongoose
 		},
 	},
 	{ timestamps: true }

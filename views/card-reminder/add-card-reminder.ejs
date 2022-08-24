@@ -6,12 +6,11 @@
           <form action="/cards/add-billreminder" method="POST">
             <div class="mb-3">
               <label for="cardnumber" class="form-label">Bank Name</label>
-              <select class="form-select" aria-label="Default select example" name="cardbankname" id="cardbankname">
+              <select class="form-select" aria-label="Banl Name" name="cardbankname" id="cardbankname">
                 <option value='0' selected>Select your bank</option>
-                <option value="1">HDFC</option>
-                <option value="2">ICICI</option>
-                <option value="3">AU Bank</option>
-                <option value="4">Bank of Baroda</option>
+                <% for (let i = 0; i < countBankList; i++) { %>
+                  <option value="<%= bankList[i]._id %>"><%= bankList[i].TBM_BankName %></option>
+                <% } %>
               </select>
             </div>
             <div class="mb-3">
@@ -31,6 +30,10 @@
               <input type="text" class="form-control" placeholder="Year" id="cardexpiryyear" name="cardexpiryyear" aria-label="Year" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
             </div>
             <div class="mb-3">
+              <label for="cardcvv" class="form-label">CVV</label>
+              <input type="text" class="form-control" id="cardcvv" name="cardcvv" aria-describedby="cardcvv">
+            </div>
+            <div class="mb-3">
               <label for="cardrewardrate" class="form-label">Reward Rate (Optional)</label>
               <input type="text" class="form-control" id="cardrewardrate" name="cardrewardrate" aria-describedby="cardrewardrate">
             </div>
@@ -44,11 +47,11 @@
             </div> 
             <div class="mb-3">
               <label for="cardbillgendate" class="form-label">Bill Generation Date</label>
-              <input type="date" class="form-control" id="cardbillgendate" name="cardbillgendate" aria-describedby="cardbillgendate">
+              <input type="text" class="form-control" id="cardbillgendate" name="cardbillgendate" aria-describedby="cardbillgendate">
             </div> 
             <div class="mb-3">
               <label for="cardduedate" class="form-label">Due Date</label>
-              <input type="date" class="form-control" id="cardduedate" name="cardduedate" aria-describedby="cardduedate">
+              <input type="text" class="form-control" id="cardduedate" name="cardduedate" aria-describedby="cardduedate">
             </div>
             <div class="mb-3">
               <label for="cardcibildate" class="form-label">CIBIL Reporting Date (Optional)</label>

@@ -1,0 +1,48 @@
+<%- include('../layouts/main-layout.ejs') %>
+
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <a href="/bank/add-bank" class="btn btn-primary">Add Bank</a>
+                </div>
+
+            </div>
+
+        </div>
+        <% if (countBankDetails > 0) { %>
+        <div class="container">
+            <div class="row">
+                <table class="table">
+                    <thead>
+                        <tr>
+                        <th scope="col">Bank Name</th>
+                        <th scope="col">Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i = 0; i < countBankDetails; i++) { %>
+                        <tr>
+                            <td><%= bankDetails[i].TBM_BankName %></td>
+                            <td><img src="<%= bankDetails[i].TBM_BankImage %>" height="200" width="200"></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <% } else { %>
+            <div class="card mt-5 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">No Bank Added</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">You have added a bank</h6>
+                    
+                    <a href="/bank/add-bank" class="card-link">Add A Bank</a>
+                </div>
+            </div>
+
+        <% } %>
+    </main>
+
+<%- include('../layouts/footer.ejs') %>
