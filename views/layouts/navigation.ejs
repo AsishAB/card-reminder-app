@@ -8,30 +8,28 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/cards/add-billreminder">Add Card</a>
-            
-          </li>
           
           <li class="nav-item">
             <a class="nav-link" href="/user/login">Login</a>
           </li>
-         
-            <li class="nav-item">
-              <a class="nav-link" href="/cards/card-list">My Cards</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/bank/bank-list">Add Bank</a>
-            </li>
-           
-         
+           <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Action
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/cards/card-list">My Cards</a></li>
+                <li><a class="dropdown-item" href="/cards/add-billreminder">Add Card</a></li>
+                <li><a class="dropdown-item" href="/bank/bank-list">Bank List </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="javascript:void(0)">Logout</a></li>
+              </ul>
+          </li>
+
         </ul>
-       
+
       </div>
     </div>
   </nav>
 
 
-    
-   
 </header>
