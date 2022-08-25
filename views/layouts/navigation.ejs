@@ -8,10 +8,12 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          
+          <% if (!isAuthenticated) { %>
           <li class="nav-item">
-            <a class="nav-link" href="/user/login">Login</a>
+            <a class="nav-link" href="/users/login">Login</a>
           </li>
+          <% } %>
+          <% if (isAuthenticated) { %>
            <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Action
@@ -20,11 +22,17 @@
                 <li><a class="dropdown-item" href="/cards/card-list">My Cards</a></li>
                 <li><a class="dropdown-item" href="/cards/add-billreminder">Add Card</a></li>
                 <li><a class="dropdown-item" href="/bank/bank-list">Bank List </a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="javascript:void(0)">Logout</a></li>
+                
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <form method="POST" action="/users/logout" class="dropdown-item">
+                      <button class="dropdown-item" type="submit" >Logout</button>
+                    </form>
+                  </li>
+                
               </ul>
           </li>
-
+          <% } %>
         </ul>
 
       </div>

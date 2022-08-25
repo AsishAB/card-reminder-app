@@ -7,7 +7,7 @@ const crypto = require("crypto"); //Default Node JS package; used to generate to
 // const sendGridTransport = require("nodemailer-sendgrid-transport");
 // const sendGridAPIKey = require("../helpers/secret-data/sendgrid_api");
 // const sendEMail = require("../helpers/secret-data/personal-email");
-//const Validation = require("../helpers/validation/validation");
+const Validation = require("../helpers/helpers/validation");
 
 // const transporter = nodemailer.createTransport(
 // 	sendGridTransport({
@@ -17,9 +17,20 @@ const crypto = require("crypto"); //Default Node JS package; used to generate to
 // 	})
 // );
 
+exports.getLoginPage = (req, res, next) => {
+	if (req.session.isLoggedIn) {
+		return res.redirect("/cards/card-list");
+	}
+	res.render("users/login-user.ejs", {
+		pageTitle: "Login User",
+	});
+};
+
 exports.getRegisterPage = (req, res, next) => {
 	//const isLoggedIn = req.session.isLoggedIn ? req.session.isLoggedIn : false;
-
+	if (req.session.isLoggedIn) {
+		return res.redirect("/cards/card-list");
+	}
 	res.render("users/register-user.ejs", {
 		pageTitle: "Register New User",
 		errorMessage: "",
@@ -44,69 +55,69 @@ exports.registerUser = (req, res, next) => {
 	const validationError = [];
 	var errorMsg = "";
 
-	// if (Validation.blankValidation(firstName)) {
-	// 	validationError.push("First name cannot be blank");
-	// 	//return false;
-	// }
+	if (Validation.blankValidation(firstName)) {
+		validationError.push("First name cannot be blank");
+		//return false;
+	}
 
-	// if (Validation.blankValidation(lastName)) {
-	// 	validationError.push("Last Name cannot be blank");
-	// 	//return false;
-	// }
+	if (Validation.blankValidation(lastName)) {
+		validationError.push("Last Name cannot be blank");
+		//return false;
+	}
 
-	// if (Validation.blankValidation(emailId)) {
-	// 	validationError.push("Email Id cannot be blank");
-	// 	//return false;
-	// }
+	if (Validation.blankValidation(emailId)) {
+		validationError.push("Email Id cannot be blank");
+		//return false;
+	}
 
-	// if (emailId && Validation.checkEmailId(emailId)) {
-	// 	validationError.push(
-	// 		"The Email Id format is not correct. Accepted Format - example@example.com"
-	// 	);
-	// }
+	if (emailId && Validation.checkEmailId(emailId)) {
+		validationError.push(
+			"The Email Id format is not correct. Accepted Format - example@example.com"
+		);
+	}
 
-	// if (Validation.blankValidation(phoneNo)) {
-	// 	validationError.push("Mobile Number cannot be blank");
-	// 	//return false;
-	// }
+	if (Validation.blankValidation(phoneNo)) {
+		validationError.push("Mobile Number cannot be blank");
+		//return false;
+	}
 
-	// if (phoneNo && Validation.checkMobileNumberIN(phoneNo)) {
-	// 	validationError.push(
-	// 		"The mobile number format is not correct. Please enter a 10-digit mobile number"
-	// 	);
-	// }
+	if (phoneNo && Validation.checkMobileNumberIN(phoneNo)) {
+		validationError.push(
+			"The mobile number format is not correct. Please enter a 10-digit mobile number"
+		);
+	}
 
-	// if (Validation.blankValidation(password)) {
-	// 	validationError.push("Password cannot be blank");
-	// }
+	if (Validation.blankValidation(password)) {
+		validationError.push("Password cannot be blank");
+	}
 
-	// if (Validation.blankValidation(confirm_password)) {
-	// 	validationError.push("Confirm Password cannot be blank");
-	// }
+	if (Validation.blankValidation(confirm_password)) {
+		validationError.push("Confirm Password cannot be blank");
+	}
 
-	// if (
-	// 	password &&
-	// 	confirm_password &&
-	// 	Validation.checkPasswordConfPasswordMatch(password, confirm_password)
-	// ) {
-	// 	validationError.push("Password and Confirm Password must match");
-	// }
+	if (
+		password &&
+		confirm_password &&
+		Validation.checkPasswordConfPasswordMatch(password, confirm_password)
+	) {
+		validationError.push("Password and Confirm Password must match");
+	}
 
-	// if (validationError.length > 0) {
-	// 	return res.status(422).render("users/register-user.ejs", {
-	// 		pageTitle: "Register New User",
-	// 		errorMessage: errorMsg,
-	// 		validationErrors: validationError,
-	// 		oldInput: {
-	// 			firstName: firstName,
-	// 			lastName: lastName,
-	// 			emailId: emailId,
-	// 			phoneNo: phoneNo,
-	// 			password: password,
-	// 			confirm_password: confirm_password,
-	// 		},
-	// 	});
-	// }
+	if (validationError.length > 0) {
+		return res.status(422).render("users/register-user.ejs", {
+			pageTitle: "Register New User",
+			errorMessage: errorMsg,
+			validationErrors: validationError,
+			oldInput: {
+				firstName: firstName,
+				lastName: lastName,
+				emailId: emailId,
+				phoneNo: phoneNo,
+				password: password,
+				confirm_password: confirm_password,
+			},
+		});
+	}
 
 	//console.log(firstName+" "+lastName+" "+emailId+" "+phoneNo+" "+password+" "+confirm_password);
 	User.find({ $or: [{ TUM_Email: emailId }, { TUM_MobileNo: phoneNo }] })
@@ -158,8 +169,6 @@ exports.registerUser = (req, res, next) => {
 								res.redirect("/user/login");
 							})
 							.catch(err => {
-								//console.log("Inside UserController.js");
-								// console.log(err);
 								const error = new Error(err);
 								error.httpStatusCode = 500;
 								return next(error);
@@ -180,4 +189,115 @@ exports.registerUser = (req, res, next) => {
 			error.httpStatusCode = 500;
 			return next(error);
 		});
+};
+
+exports.loginUser = (req, res, next) => {
+	// req.session.isLoggedIn = false;
+	const userId = req.body.username;
+	const password = req.body.password;
+	// console.log(req.body);
+	const validationError = [];
+	var errorMsg = "";
+	if (Validation.blankValidation(userId)) {
+		validationError.push("User Id cannot be blank");
+		//return false;
+	}
+
+	if (
+		userId != "" &&
+		!(Validation.checkEmailId(userId) || Validation.checkMobileNumberIN(userId))
+	) {
+		validationError.push(
+			"The User Id format is not correct. Accepted Format - example@example.com or a 10-digit mobile number"
+		);
+		//return false;
+	}
+	if (Validation.blankValidation(password)) {
+		validationError.push("Password cannot be blank");
+		//return false;
+	}
+
+	if (validationError.length > 0) {
+		return res.status(422).render("users/login-user.ejs", {
+			pageTitle: "Login User",
+			errorMessage: errorMsg,
+			validationErrors: validationError,
+			oldInput: {
+				username: userId,
+				password: password,
+			},
+		});
+	}
+
+	User.findOne({ $or: [{ TUM_Email: userId }, { TUM_MobileNo: userId }] })
+		.then(result => {
+			//console.log(result);
+			if (!result) {
+				errorMsg = "No User Found";
+				//req.flash('error',errorMsg[0]);
+				return res.status(422).render("users/login-user.ejs", {
+					pageTitle: "Login User",
+					errorMessage: errorMsg,
+					validationErrors: [],
+					oldInput: {
+						username: userId,
+						password: password,
+					},
+				});
+			} else {
+				argon2
+					.verify(result.TUM_Password, password)
+					.then(doMatch => {
+						if (doMatch) {
+							req.session.isLoggedIn = true;
+
+							req.session.user = result;
+							req.session.save(err => {
+								if (err) {
+									console.log("Inside UserController -> loginUser");
+
+									console.log(err);
+									return res.redirect("/");
+								}
+								return res.redirect("/cards/card-list");
+							});
+						} else {
+							errorMsg = "Entered Password is wrong";
+							//req.flash('error', errorMsg);
+							return res.status(422).render("users/login-user.ejs", {
+								pageTitle: "Login User",
+								errorMessage: errorMsg,
+								validationErrors: [],
+								oldInput: {
+									username: userId,
+									password: "",
+								},
+							});
+						}
+					})
+					.catch(err => {
+						const error = new Error(err);
+						error.httpStatusCode = 500;
+						return next(error);
+						//console.log(err);
+					});
+			}
+		})
+		.catch(err => {
+			// console.log(err);
+			const error = new Error(err);
+			error.httpStatusCode = 500;
+			return next(error);
+		});
+};
+
+exports.logoutUser = (req, res, next) => {
+	req.session.destroy(err => {
+		if (err) {
+			const error = new Error(err);
+			error.httpStatusCode = 500;
+			return next(error);
+		}
+		res.redirect("/");
+	});
 };

@@ -1,0 +1,59 @@
+<%- include('../layouts/main-layout.ejs') %>
+<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+<main>
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="/assets/index_carousal/bankofbaroda-easy.png" class="d-block w-100" alt="..." height="300px" width="100%">
+            </div>
+            <div class="carousel-item">
+                <img src="/assets/index_carousal/rbl-mastercard.jpg" class="d-block w-100" alt="..." height="300px" width="100%"> 
+            </div>
+            <div class="carousel-item">
+                <img src="/assets/index_carousal/amazon-pay.png" class="d-block w-100" alt="..." height="300px" width="100%">
+            </div>
+            <div class="carousel-item">
+                <img src="/assets/index_carousal/amex-card.jpg" class="d-block w-100" alt="..." height="300px" width="100%">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <div class="card">
+  <img src="..." class="card-img-top" alt="...">
+
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+
+
+</main>
+
+
+<%- include('../layouts/footer.ejs') %>
+<%- include('../layouts/end-tag.ejs') %>
