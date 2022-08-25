@@ -1,7 +1,7 @@
 const CardReminderModel = require("../models/CardReminderModel");
 const BankModel = require("../models/BankModel");
 const Crypt = require("../helpers/encrypt_decrypt/encryptDecryptText");
-var XLSX = require("xlsx");
+
 const globalURL = require("../helpers/global-url").globalURL;
 const Helper = require("../helpers/helpers/helper");
 
@@ -104,12 +104,8 @@ exports.addCardReminder = async (req, res, next) => {
 
 exports.viewCard = async (req, res, next) => {
 	const cardId = req.params.cardId;
-	// console.log(cardId);
+
 	const data = {};
-	// let cardNumber;
-	// let separatedCardNumber = [];
-	// let splitValue = 4;
-	// let totalLengthofCardNumber;
 
 	try {
 		const cardDetail = await CardReminderModel.findById(cardId).populate(

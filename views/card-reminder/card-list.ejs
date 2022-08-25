@@ -7,11 +7,11 @@
                     <div class="row mb-4">
                         <div class="col-md-12 text-center">
                             <a href="/cards/add-billreminder" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> Add A Card</a>
-                            <button class="btn btn-success"> <i class="fas fa-file-excel"></i> Export to Excel Sheet</a>
+                            
                         </div>
                     </div>
                 <div class="row">
-                            <table class="table">
+                            <table class="table" id="card-lists">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -115,7 +115,17 @@
 </div>
 <%- include('../layouts/footer.ejs') %>
 
-
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = new DataTable('#card-lists',{
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'pdf', 'print'
+            ]
+        });
+    });
+     
+</script>
 <script src="/js/card-list.js"></script>
 
 
