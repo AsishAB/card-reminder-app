@@ -12,6 +12,54 @@ exports.getAddCardReminder = async (req, res, next) => {
 		pageTitle: "Add/Edit Card Reminder",
 		bankList: bankList,
 		countBankList: countBankList,
+		cardDetail: null,
+		errorMessage: "",
+	});
+};
+
+exports.editCard = async (req, res, next) => {
+	const cardId = req.params.cardId;
+	const userId = "6305efe8c4f33170a06934b2";
+	const bankList = await BankModel.find();
+	const countBankList = await BankModel.find().countDocuments();
+
+	const cardDetail = await CardReminderModel.findById(cardId);
+	// console.log(cardDetail);
+
+	if (!cardDetail) {
+		return res.render("card-reminder/add-card-reminder.ejs", {
+			pageTitle: "Add/Edit Card Reminder",
+			bankList: bankList,
+			countBankList: countBankList,
+
+			errorMessage: "No Card Found",
+		});
+	}
+
+	if (cardDetail.TCR_CardCreatedBy.toString() !== userId) {
+		return res.render("card-reminder/add-card-reminder.ejs", {
+			pageTitle: "Add/Edit Card Reminder",
+			bankList: bankList,
+			countBankList: countBankList,
+
+			errorMessage: "Un-Authorized",
+		});
+	}
+	cardDetail.TCR_CardNumber = Crypt.decrypt(
+		cardDetail.TCR_CardNumber,
+		"private.pem"
+	);
+	cardDetail.TCR_CardSecretCode = Crypt.decrypt(
+		cardDetail.TCR_CardSecretCode,
+		"private.pem"
+	);
+	res.render("card-reminder/add-card-reminder.ejs", {
+		pageTitle: "Add/Edit Card Reminder",
+		bankList: bankList,
+		countBankList: countBankList,
+		cardId: cardId,
+		cardDetail: cardDetail,
+		errorMessage: "",
 	});
 };
 
@@ -58,6 +106,7 @@ exports.getCardList = async (req, res, next) => {
 exports.addCardReminder = async (req, res, next) => {
 	const userId = "6305efe8c4f33170a06934b2";
 
+	const cardId = req.body.cardId;
 	const cardbankname = req.body.cardbankname;
 	const cardname = req.body.cardname;
 	const cardnumber = req.body.cardnumber;
@@ -71,7 +120,7 @@ exports.addCardReminder = async (req, res, next) => {
 	const cardduedate = req.body.cardduedate;
 	const cardcibildate = req.body.cardcibildate;
 	const createdBy = userId;
-
+	const updatedBy = userId;
 	const encryptedCardNumber = Crypt.encrypt(cardnumber, "public.pem");
 	const encryptedCardCVV = Crypt.encrypt(cardcvv, "public.pem");
 	const CardReminder = new CardReminderModel({
@@ -90,13 +139,41 @@ exports.addCardReminder = async (req, res, next) => {
 		TCR_CardCreatedBy: createdBy,
 	});
 	try {
-		const result = await CardReminder.save();
-		if (result) {
-			return res.status(201).redirect("/cards/card-list");
+		let result;
+		if (cardId == "") {
+			result = await CardReminder.save();
 		} else {
-			console.log("Inside BillController => addCardReminder ==> Error");
-			return res.status(500).redirect("/cards/add-billreminder");
+			result = await CardReminderModel.findById(cardId);
+			if (result.TCR_CardCreatedBy.toString() !== userId.toString()) {
+				errorMsg = "Unauthorised";
+				console.log(`Inside BillController -> addCardReminder -> ${errorMsg}`);
+				return;
+				// return res.render("card-reminder/add-card-reminder.ejs", {
+				// 	pageTitle: "Add/Edit Card Reminder",
+				// 	bankList: [],
+				// 	countBankList: 0,
+				// 	cardId: "",
+				// 	cardDetail: null,
+				// 	errorMessage: ,
+				// });
+			}
+			result.TCR_BankName = cardbankname;
+			result.TCR_CardName = cardname;
+			result.TCR_CardNumber = encryptedCardNumber;
+			result.TCR_CardExpiryMonth = cardexpirymonth;
+			result.TCR_CardExpiryYear = cardexpiryyear;
+			result.TCR_CardSecretCode = encryptedCardCVV;
+			result.TCR_CardRewardRate = cardrewardrate;
+			result.TCR_CardCharges = cardcharges;
+			result.TCR_CardLimit = cardlimit;
+			result.TCR_CardBillGenDate = cardbillgendate;
+			result.TCR_CardBillDueDate = cardduedate;
+			result.TCR_CardCIBILReportingDate = cardcibildate;
+			result.TCR_CardUpdatedBy = updatedBy;
+			await result.save();
 		}
+
+		return res.status(201).redirect("/cards/card-list");
 	} catch (err) {
 		console.log(err);
 	}

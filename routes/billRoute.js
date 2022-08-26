@@ -15,6 +15,8 @@ router.post(
 	AuthMiddleware,
 	BillController.addCardReminder
 );
+
+router.get("/edit-card/:cardId", AuthMiddleware, BillController.editCard);
 router.get("/card-list", AuthMiddleware, BillController.getCardList);
 // router.post("/view-card", BillController.viewCard);
 router.get("/view-card/:cardId", AuthMiddleware, BillController.viewCard);
