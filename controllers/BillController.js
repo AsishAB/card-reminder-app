@@ -19,7 +19,8 @@ exports.getAddCardReminder = async (req, res, next) => {
 
 exports.editCard = async (req, res, next) => {
 	const cardId = req.params.cardId;
-	const userId = "6305efe8c4f33170a06934b2";
+	// const userId = "6305efe8c4f33170a06934b2";
+	const userId = req.user._id;
 	const bankList = await BankModel.find();
 	const countBankList = await BankModel.find().countDocuments();
 
@@ -64,7 +65,8 @@ exports.editCard = async (req, res, next) => {
 };
 
 exports.getCardList = async (req, res, next) => {
-	const userId = "6305efe8c4f33170a06934b2";
+	// const userId = "6305efe8c4f33170a06934b2";
+	const userId = req.user._id;
 	const cardDetails = await CardReminderModel.find({
 		TCR_CardCreatedBy: userId,
 	})
@@ -104,7 +106,8 @@ exports.getCardList = async (req, res, next) => {
 };
 
 exports.addCardReminder = async (req, res, next) => {
-	const userId = "6305efe8c4f33170a06934b2";
+	//const userId = "6305efe8c4f33170a06934b2";
+	const userId = req.user._id;
 
 	const cardId = req.body.cardId;
 	const cardbankname = req.body.cardbankname;
@@ -181,7 +184,7 @@ exports.addCardReminder = async (req, res, next) => {
 
 exports.viewCard = async (req, res, next) => {
 	const cardId = req.params.cardId;
-
+	const userId = req.user._id;
 	const data = {};
 
 	try {
@@ -193,7 +196,10 @@ exports.viewCard = async (req, res, next) => {
 			data.message = "Card Not Found";
 			return res.json(data);
 		}
-
+		if (cardDetail.TCR_CardCreatedBy.toString !== userId.toString) {
+			console.log("Inside BillController -> viewCard =. Unauthorised");
+			return;
+		}
 		cardDetail.TCR_CardNumber = Crypt.decrypt(
 			cardDetail.TCR_CardNumber,
 			"private.pem"
@@ -241,6 +247,8 @@ exports.viewCard = async (req, res, next) => {
 
 exports.deleteCard = async (req, res, next) => {
 	const cardId = req.params.cardId;
+
+	const userId = req.user._id;
 	const data = {};
 	try {
 		const cardDetail = await CardReminderModel.findById(cardId);
@@ -249,12 +257,15 @@ exports.deleteCard = async (req, res, next) => {
 			data.message = "Card Not Found";
 			return res.json(data);
 		}
-		const result = await CardReminderModel.findByIdAndDelete(cardId);
-		if (result) {
-			data.response = "success";
-			data.message = "Card Deleted";
-			return res.json(data);
+		if (cardDetail.TCR_CardCreatedBy.toString !== userId.toString) {
+			console.log("Inside BillController -> deleteCard =. Unauthorised");
+			return;
 		}
+		const result = await CardReminderModel.findByIdAndDelete(cardId);
+
+		data.response = "success";
+		data.message = "Card Deleted";
+		return res.json(data);
 	} catch (err) {
 		data.response = "error";
 		data.message = err;

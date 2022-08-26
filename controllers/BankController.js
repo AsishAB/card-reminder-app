@@ -23,7 +23,8 @@ exports.getAddBank = (req, res, next) => {
 exports.addBank = async (req, res, next) => {
 	const bankName = req.body.bankName;
 	const bankImage = req.file;
-	const userId = "6305efe8c4f33170a06934b2";
+	// const userId = "6305efe8c4f33170a06934b2";
+	const userId = req.user._id;
 
 	let fileName = bankImage ? "bank_images/" + bankImage.filename : "";
 

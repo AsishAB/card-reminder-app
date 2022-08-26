@@ -8,6 +8,7 @@ const session = require("express-session");
 const session_secret = require("./helpers/helpers/session-secret-code");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
+const User = require("./models/UserModel");
 const mongoURL = require("./helpers/gitignores/mongodburl");
 const billReminderRoutes = require("./routes/billRoute");
 const userRoutes = require("./routes/userRoutes");
@@ -54,6 +55,25 @@ app.use((req, res, next) => {
 	res.locals.isAuthenticated = req.session.isLoggedIn; // Used in all views (navigation.ejs)
 	//res.locals.csrfToken = req.csrfToken();
 	next();
+});
+
+app.use((req, res, next) => {
+	// throw new Error('Sync Dummy');
+	if (!req.session.user) {
+		return next();
+	}
+	User.findById(req.session.user._id)
+		.then(user => {
+			if (!user) {
+				return next();
+			}
+			//console.log(user);
+			req.user = user;
+			next();
+		})
+		.catch(err => {
+			next(new Error(err));
+		});
 });
 
 app.use("/", indexRoute);
