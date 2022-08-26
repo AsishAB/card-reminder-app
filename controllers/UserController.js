@@ -1,4 +1,5 @@
 const User = require("../models/UserModel");
+const CardReminderModel = require("../models/CardReminderModel");
 // const ResetPassword = require("../models/ResetPasswordModel");
 const argon2 = require("argon2");
 const crypto = require("crypto"); //Default Node JS package; used to generate toekn for password-reset, etc.
@@ -17,19 +18,10 @@ const Validation = require("../helpers/helpers/validation");
 // 	})
 // );
 
-exports.getLoginPage = (req, res, next) => {
-	if (req.session.isLoggedIn) {
-		return res.redirect("/cards/card-list");
-	}
-	res.render("users/login-user.ejs", {
-		pageTitle: "Login User",
-	});
-};
-
 exports.getRegisterPage = (req, res, next) => {
 	//const isLoggedIn = req.session.isLoggedIn ? req.session.isLoggedIn : false;
 	if (req.session.isLoggedIn) {
-		return res.redirect("/cards/card-list");
+		return res.redirect("/users/dsahboard");
 	}
 	res.render("users/register-user.ejs", {
 		pageTitle: "Register New User",
@@ -70,7 +62,7 @@ exports.registerUser = (req, res, next) => {
 		//return false;
 	}
 
-	if (emailId && Validation.checkEmailId(emailId)) {
+	if (emailId && !Validation.checkEmailId(emailId)) {
 		validationError.push(
 			"The Email Id format is not correct. Accepted Format - example@example.com"
 		);
@@ -166,7 +158,7 @@ exports.registerUser = (req, res, next) => {
 							.then(() => {
 								console.log("Inside UserController -> registerUser");
 								console.log("User has been successfully registered");
-								res.redirect("/user/login");
+								return res.redirect("/user/login");
 							})
 							.catch(err => {
 								const error = new Error(err);
@@ -191,6 +183,16 @@ exports.registerUser = (req, res, next) => {
 		});
 };
 
+exports.getLoginPage = (req, res, next) => {
+	if (req.session.isLoggedIn) {
+		return res.redirect("/users/dsahboard");
+	}
+	res.render("users/login-user.ejs", {
+		pageTitle: "Login User",
+		validationErrors: [],
+		errorMessage: "",
+	});
+};
 exports.loginUser = (req, res, next) => {
 	// req.session.isLoggedIn = false;
 	const userId = req.body.username;
@@ -257,9 +259,9 @@ exports.loginUser = (req, res, next) => {
 									console.log("Inside UserController -> loginUser");
 
 									console.log(err);
-									return res.redirect("/");
+									return res.redirect("/users/login");
 								}
-								return res.redirect("/cards/card-list");
+								return res.redirect("/users/dashboard");
 							});
 						} else {
 							errorMsg = "Entered Password is wrong";
@@ -299,5 +301,31 @@ exports.logoutUser = (req, res, next) => {
 			return next(error);
 		}
 		res.redirect("/");
+	});
+};
+
+exports.getDashboard = async (req, res, next) => {
+	const userId = "6305efe8c4f33170a06934b2";
+	const cardDetail = await CardReminderModel.find({
+		TCR_CardCreatedBy: userId,
+	});
+
+	let totalLimit = 0;
+	let totalCardCharges = 0;
+	const cardSubDetails = {};
+	cardSubDetails.totalCards = cardDetail.length;
+	for (let i = 0; i < cardDetail.length; i++) {
+		totalLimit += Number(cardDetail[i].TCR_CardLimit);
+	}
+	cardSubDetails.totalLimit = totalLimit;
+	for (let i = 0; i < cardDetail.length; i++) {
+		totalCardCharges += Number(cardDetail[i].TCR_CardCharges);
+	}
+	cardSubDetails.totalChargesForCard = totalCardCharges;
+	//const latestBillDate = ;
+
+	res.render("users/dashboard.ejs", {
+		pageTitle: "Dashboard",
+		cardSubDetails: cardSubDetails,
 	});
 };

@@ -13,7 +13,7 @@
         <% if (countBankDetails > 0) { %>
         <div class="container">
             <div class="row">
-                <table class="table">
+                <table class="table" id="bank-list">
                     <thead>
                         <tr>
                         <th scope="col">Bank Name</th>
@@ -46,4 +46,13 @@
     </main>
 
 <%- include('../layouts/footer.ejs') %>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = new DataTable('#bank-list');
+    });
+     
+</script>
+
 <%- include('../layouts/end-tag.ejs') %>
