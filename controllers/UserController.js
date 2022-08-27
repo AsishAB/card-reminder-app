@@ -305,7 +305,14 @@ exports.logoutUser = (req, res, next) => {
 };
 
 exports.getDashboard = async (req, res, next) => {
-	const userId = "6305efe8c4f33170a06934b2";
+	const userId = req.user._id;
+	const user = await User.findById(userId);
+
+	let userName;
+
+	// userName = user.TUM_FirstName + " " + user.TUM_LastName;
+	userName = user.TUM_FirstName;
+
 	const cardDetail = await CardReminderModel.find({
 		TCR_CardCreatedBy: userId,
 	});
@@ -327,5 +334,6 @@ exports.getDashboard = async (req, res, next) => {
 	res.render("users/dashboard.ejs", {
 		pageTitle: "Dashboard",
 		cardSubDetails: cardSubDetails,
+		userName: userName,
 	});
 };

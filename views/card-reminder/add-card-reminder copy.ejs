@@ -1,6 +1,4 @@
 <%- include('../layouts/main-layout.ejs') %>
-<link rel="stylesheet" href="/css/add-billreminder.css">
-
   <%  
     if (cardDetail) {
       cardId = cardDetail._id
@@ -34,16 +32,15 @@
      
   %>
 
-  <main class="body">
-    <div class="signup-form">
-    <form action="/cards/add-billreminder" method="POST" class="shadow p-3 mb-5 bg-body rounded">
-		<h2><% if (cardId == '') { %> Add a <% } else { %>  Edit <% } %> Card</h2>
-		<input type="hidden" id="cardId" name="cardId" value="<%= cardId  %>"> 
-		<hr>
-        <div class="form-group">
-			<label>Bank Name</label>
-        	 <select class="form-select" aria-label="Bank Name" name="cardbankname" id="cardbankname">
-                <option value='0' selected>Select your bank</option>
+  <main>
+    <div class="container">
+      <div class="row">
+          <form action="/cards/add-billreminder" method="POST">
+            <div class="mb-3">
+              <input type="hidden" id="cardId" name="cardId" value="<%= cardId  %>"> 
+              <label for="cardnumber" class="form-label">Bank Name</label>
+              <select class="form-select" aria-label="Banl Name" name="cardbankname" id="cardbankname">
+                <option value='0'>Select your bank</option>
                 <% for (let i = 0; i < countBankList; i++) { 
                      var selected = (bankList[i]._id.toString() === cardbankname.toString()) ? 'selected' : '' ;
                   %>
@@ -51,73 +48,72 @@
                   <option value="<%= bankList[i]._id.toString() %>" selected="<%= selected %>"> <%= bankList[i].TBM_BankName %> </option>
                 <% } %>
               </select>
-        </div>
-        <div class="form-group">
-			    <label>Credit Card Name</label>
-        	<input type="text" class="form-control" id="cardname" name="cardname" aria-describedby="cardname" value="<%= cardName %>" >
-          <small class="form-text" style="font-size: 12px;">We'll never share your card with anyone else.</small>
-        </div>
-		<div class="form-group">
-			    <label for="cardnumber" class="form-label">Credit Card Number</label>
-          <input type="text" class="form-control" id="cardnumber" name="cardnumber" aria-describedby="cardnumber" value="<%= cardNumber %>" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57" onpaste="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57" >
-          <small id="emailHelp" class="form-text" style="font-size: 12px;">We'll never share your card with anyone else.</small>
-    </div>
-		<div class="form-group">
-			    <label for="exampleInputPassword1" class="form-label">Expiry Date</label>
+            </div>
+            <div class="mb-3">
+              <label for="cardname" class="form-label">Credit Card Name</label>
+              <input type="text" class="form-control" id="cardname" name="cardname" aria-describedby="cardname" value="<%= cardName %>" >
+              <div id="emailHelp" class="form-text">We'll never share your card with anyone else.</div>
+            </div>
+            <div class="mb-3">
+              <label for="cardnumber" class="form-label">Credit Card Number</label>
+              <input type="text" class="form-control" id="cardnumber" name="cardnumber" aria-describedby="cardnumber" value="<%= cardNumber %>" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57" onpaste="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57" >
+              <div id="emailHelp" class="form-text">We'll never share your card with anyone else.</div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Expiry Date</label>
             <div class="input-group mb-3">
               <input type="text" class="form-control" placeholder="Month" id="cardexpirymonth" name="cardexpirymonth" value="<%= cardexpirymonth %>" aria-label="Month" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
               <input type="text" class="form-control" placeholder="Year" id="cardexpiryyear" name="cardexpiryyear" value="<%= cardexpiryyear %>" aria-label="Year" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
             </div>
-    </div>
-    <div class="form-group">
-			    <label for="cardcvv" class="form-label">CVV</label>
+            <div class="mb-3">
+              <label for="cardcvv" class="form-label">CVV</label>
               <input type="text" class="form-control" id="cardcvv" value="<%= cardcvv %>" name="cardcvv" aria-describedby="cardcvv">
-               <small id="emailHelp" class="form-text" style="font-size: 12px;">We'll never share your Secret Code with anyone else.</small>
-    </div>
-    <div class="form-group">
-			   <label for="cardrewardrate" class="form-label">Reward Rate (Optional)</label>
+            </div>
+            <div class="mb-3">
+              <label for="cardrewardrate" class="form-label">Reward Rate (Optional)</label>
               <input type="text" class="form-control" id="cardrewardrate" value="<%= cardrewardrate %>" name="cardrewardrate" aria-describedby="cardrewardrate">
-               
-    </div>
-    <div class="form-group">
-			    <label for="cardcharges" class="form-label">Yearly Charges</label>
+            </div>
+            <div class="mb-3">
+              <label for="cardcharges" class="form-label">Yearly Charges</label>
               <input type="text" class="form-control" id="cardcharges" name="cardcharges" value="<%= cardcharges %>" aria-describedby="cardcharges">
-               
-    </div>
-    <div class="form-group">
-			    <label for="cardlimit" class="form-label">Limit</label>
-              <input type="text" class="form-control" id="cardlimit" name="cardlimit" value="<%= cardlimit %>" aria-describedby="cardlimit"> 
-    </div>
-    <div class="form-group">
-			    <label for="cardbillgendate" class="form-label">Bill Generation Date</label>
+            </div>
+            <div class="mb-3">
+              <label for="cardlimit" class="form-label">Limit</label>
+              <input type="text" class="form-control" id="cardlimit" name="cardlimit" value="<%= cardlimit %>" aria-describedby="cardlimit">
+            </div> 
+            <div class="mb-3">
+              <label for="cardbillgendate" class="form-label">Bill Generation Date</label>
               <div class="input-group mb-3">
                 <input type="text" class="form-control" id="cardbillgendate" name="cardbillgendate" value="<%= cardbillgendate %>" maxlength="2"  aria-describedby="cardbillgendate"  onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
                 <input type="text" class="form-control" id="" name="" value=" of every month"  disabled="disabled"> 
+              
               </div>
-    </div>
-     <div class="form-group">
-			   <label for="cardduedate" class="form-label">Due Date</label>
+            </div>
+             
+            <div class="mb-3">
+              <label for="cardduedate" class="form-label">Due Date</label>
                <div class="input-group mb-3">
                  <input type="text" class="form-control" id="cardduedate" name="cardduedate" value="<%= cardduedate %>" maxlength="2"  aria-describedby="cardduedate" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
                  <input type="text" class="form-control" id="" name="" value=" of every month"  disabled="disabled"> 
                 </div>
-    </div>
-     <div class="form-group">
-			   <label for="cardcibildate" class="form-label">CIBIL Reporting Date (Optional)</label>
+            </div>
+              
+            <div class="mb-3">
+              <label for="cardcibildate" class="form-label">CIBIL Reporting Date (Optional)</label>
               <div class="input-group mb-3">
                 <input type="text" class="form-control" id="cardcibildate" name="cardcibildate" value="<%= cardcibildate %>" aria-describedby="cardcibildate" maxlength="2" onkeypress="return event.charCode &gt;= 48 &amp;&amp; event.charCode &lt;= 57">
                 <input type="text" class="form-control" id="" name="" value=" of every month"  disabled="disabled"> 
               </div>
-    </div>
+            </div>    
               
-		<div class="form-group text-center">
-            <button type="submit" class="btn btn-primary btn-block btn-lg">Submit</button>
-        </div>
-		
-  </form>
-	
-</div>
+              
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+
+      </div>
+    </div>
     
+
   </main>
 
 <%- include('../layouts/footer.ejs') %>

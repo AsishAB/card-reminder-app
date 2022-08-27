@@ -32,17 +32,17 @@ exports.editCard = async (req, res, next) => {
 			pageTitle: "Add/Edit Card Reminder",
 			bankList: bankList,
 			countBankList: countBankList,
-
+			cardDetail: null,
 			errorMessage: "No Card Found",
 		});
 	}
 
-	if (cardDetail.TCR_CardCreatedBy.toString() !== userId) {
+	if (cardDetail.TCR_CardCreatedBy.toString() !== userId.toString()) {
 		return res.render("card-reminder/add-card-reminder.ejs", {
 			pageTitle: "Add/Edit Card Reminder",
 			bankList: bankList,
 			countBankList: countBankList,
-
+			cardDetail: null,
 			errorMessage: "Un-Authorized",
 		});
 	}
@@ -54,6 +54,7 @@ exports.editCard = async (req, res, next) => {
 		cardDetail.TCR_CardSecretCode,
 		"private.pem"
 	);
+
 	res.render("card-reminder/add-card-reminder.ejs", {
 		pageTitle: "Add/Edit Card Reminder",
 		bankList: bankList,
@@ -87,6 +88,33 @@ exports.getCardList = async (req, res, next) => {
 				element.TCR_CardCharges = 0 + " (Life Time Free)";
 			} else {
 				element.TCR_CardCharges = Number(element.TCR_CardCharges);
+			}
+			if (
+				element.TCR_CardRewardRate == "" ||
+				element.TCR_CardRewardRate == null ||
+				element.TCR_CardRewardRate == undefined
+			) {
+				element.TCR_CardRewardRate = "N/A";
+			} else {
+				element.TCR_CardRewardRate += "th of every month";
+			}
+			if (
+				element.TCR_CardBillGenDate == "" ||
+				element.TCR_CardBillGenDate == null ||
+				element.TCR_CardBillGenDate == undefined
+			) {
+				element.TCR_CardBillGenDate = "N/A";
+			} else {
+				element.TCR_CardBillGenDate += "th of every month";
+			}
+			if (
+				element.TCR_CardBillDueDate == "" ||
+				element.TCR_CardBillDueDate == null ||
+				element.TCR_CardBillDueDate == undefined
+			) {
+				element.TCR_CardBillDueDate = "N/A";
+			} else {
+				element.TCR_CardBillDueDate += "th of every month";
 			}
 			element.TCR_BankName.TBM_BankImage =
 				globalURL + element.TCR_BankName.TBM_BankImage;

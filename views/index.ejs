@@ -15,7 +15,18 @@
             Use the app to manage all your cards.
             You can store all the details in a secured environemt and you can export the data to an Excel Sheet
         </p>
-        
+        <% if (!isAuthenticated) { %>
+        <div class="row text-center">
+          <div class="col-md-12">
+            <a href="/users/login" class="btn btn-white border border-dark" >Login Now</a>
+          </div>
+          <div class="col-md-12 mt-3">
+            <a href="/users/register" class="btn btn-white border border-dark" >Dont have an account? Create one Now</a>
+          </div>
+        </div>
+        <% } %>
+
+
       </div>
     </div>
 
@@ -33,7 +44,7 @@
         <div class="h-100 p-5 bg-light border rounded-3">
           <h2>More Features to Come</h2>
           <p>
-            We will add more like storing Bank Account Details like Account Number, IFSC Code and so on..
+            More featues like Bank Account Details like Account Number, IFSC Code and so on.., will be added in the future.
           </p>
           
         </div>
