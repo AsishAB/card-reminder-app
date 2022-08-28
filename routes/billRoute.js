@@ -26,4 +26,6 @@ router.delete(
 	BillController.deleteCard
 );
 
+router.get("/exportToExcel", AuthMiddleware, BillController.exportToExcel);
+
 module.exports = router;

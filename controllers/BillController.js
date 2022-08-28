@@ -1,4 +1,5 @@
 const CardReminderModel = require("../models/CardReminderModel");
+
 const BankModel = require("../models/BankModel");
 const Crypt = require("../helpers/encrypt_decrypt/encryptDecryptText");
 
@@ -226,35 +227,18 @@ exports.viewCard = async (req, res, next) => {
 		}
 		if (cardDetail.TCR_CardCreatedBy.toString !== userId.toString) {
 			console.log("Inside BillController -> viewCard =. Unauthorised");
-			return;
+			data.response = "error";
+			data.message = "Unauthorised";
+			return res.json(data);
 		}
 		cardDetail.TCR_CardNumber = Crypt.decrypt(
 			cardDetail.TCR_CardNumber,
 			"private.pem"
 		);
-		let cardNumber = cardDetail.TCR_CardNumber;
-		cardNumber = Helper.addZeroes(cardNumber);
-		let totalLengthofCardNumber = cardNumber.length;
-		let separatedCardNumber = [];
-		let splitValue;
-		let spValue = 4;
-		splitValue = spValue;
 
-		let endOfLoop = totalLengthofCardNumber / splitValue;
-
-		for (let i = 0; i < endOfLoop; i++) {
-			totalLengthofCardNumber = totalLengthofCardNumber - spValue;
-
-			let splittedCardValue = cardNumber.substr(
-				totalLengthofCardNumber,
-				spValue
-			);
-			separatedCardNumber.push(splittedCardValue);
-			splitValue += spValue;
-		}
-		separatedCardNumber = Helper.reverseArray(separatedCardNumber);
-		separatedCardNumber = separatedCardNumber.toString().replace(/,/g, "-");
-		cardDetail.TCR_CardNumber = separatedCardNumber;
+		cardDetail.TCR_CardNumber = Helper.addHypenToCardNumber(
+			cardDetail.TCR_CardNumber
+		);
 		cardDetail.TCR_CardSecretCode = Crypt.decrypt(
 			cardDetail.TCR_CardSecretCode,
 			"private.pem"
@@ -273,6 +257,76 @@ exports.viewCard = async (req, res, next) => {
 	}
 };
 
+exports.exportToExcel = async (req, res, next) => {
+	const userId = req.user._id;
+	const data = {};
+	let arrayToExportToExcel = [];
+
+	try {
+		const cardDetail = await CardReminderModel.find({
+			TCR_CardCreatedBy: userId,
+		}).populate("TCR_BankName");
+		if (cardDetail.length == 0) {
+			console.log("Inside BillController -> viewCard =. Card Not Found");
+			data.response = "error";
+			data.message = "No Card Not Found";
+			// return res.json(data);
+			return res.redirect("/cards/card-list");
+		}
+		// if (cardDetail[0].TCR_CardCreatedBy.toString !== userId.toString) {
+		// 	console.log("Inside BillController -> viewCard =. Unauthorised");
+		// 	return res.redirect("/cards/card-list");
+		// }
+		cardDetail.forEach(element => {
+			element.TCR_CardNumber = Crypt.decrypt(
+				element.TCR_CardNumber,
+				"private.pem"
+			);
+			element.TCR_CardNumber = Helper.addHypenToCardNumber(
+				element.TCR_CardNumber
+			);
+			element.TCR_CardSecretCode = Crypt.decrypt(
+				element.TCR_CardSecretCode,
+				"private.pem"
+			);
+			let exportDataToExcel = {
+				"Bank Name": element.TCR_BankName.TBM_BankName,
+				"Card Name": element.TCR_CardName,
+				"Card Number": element.TCR_CardNumber,
+				"Card Expiry Date (MM/YY)":
+					element.TCR_CardExpiryMonth + "/" + element.TCR_CardExpiryYear,
+				"Card CVV": element.TCR_CardSecretCode,
+				"Card Limit": element.TCR_CardLimit,
+				"Card Charges": element.TCR_CardCharges,
+				"Reward Rate": element.TCR_CardRewardRate,
+				"Card Bill Generation Date": element.TCR_CardBillGenDate,
+				"Card Bill Due Date": element.TCR_CardBillDueDate,
+				"Card Charges": element.TCR_BankName.TBM_BankName,
+			};
+			arrayToExportToExcel.push(exportDataToExcel);
+		});
+
+		const result = await Helper.exportToExcel(
+			arrayToExportToExcel,
+			"Credit Card Details",
+			res
+		);
+
+		if (result) {
+			data.response = "success";
+			data.message = "Card Found";
+			// return res.json(data);
+			return res.redirect("/cards/card-list");
+		}
+	} catch (err) {
+		console.log(err);
+		data.response = "error";
+		data.message = "No Card Not Found";
+		// return res.json(data);
+		return res.redirect("/cards/card-list");
+	}
+};
+
 exports.deleteCard = async (req, res, next) => {
 	const cardId = req.params.cardId;
 
@@ -284,6 +338,7 @@ exports.deleteCard = async (req, res, next) => {
 			data.response = "error";
 			data.message = "Card Not Found";
 			return res.json(data);
+			// return res.redirect("/cards/card-list");
 		}
 		if (cardDetail.TCR_CardCreatedBy.toString !== userId.toString) {
 			console.log("Inside BillController -> deleteCard =. Unauthorised");

@@ -7,6 +7,8 @@
                     <div class="row mb-4">
                         <div class="col-md-12 text-center">
                             <a href="/cards/add-billreminder" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> Add A Card</a>
+                            <!-- <a href="/cards/exportToExcel" class="btn btn-success"> <i class="fas fa-file-excel"></i> Export To Excel</a> -->
+                            <button class="btn btn-success" onclick="alertMessage()"> <i class="fas fa-file-excel"></i> Export To Excel</button>
                             
                         </div>
                     </div>
@@ -117,6 +119,7 @@
 </div>
 <%- include('../layouts/footer.ejs') %>
 
+<script src="/js/sweetalert.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let table = new DataTable('#card-lists',{
@@ -126,10 +129,48 @@
             ]
         });
     });
-     
+     function alertMessage() {
+        Swal.fire({
+            title: "P.S - The file will download all the details, including the Card Numbers and CVV",
+            text: `If you want to hide these sensitive details, you should click the 'CSV' button instead`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText:
+                'Download File',
+            confirmButtonAriaLabel: 'Download File',
+            cancelButtonText:'Cancel',
+            cancelButtonColor: '#d33',
+            cancelButtonAriaLabel: 'Cancel'
+            
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    window.location = "/cards/exportToExcel";
+                    // method: "GET",
+                    
+                    // })
+                    // .then(result => {
+                    //     return result.json();
+                    // })
+                    // //.then(data => {
+                    //     // console.log(data);
+                    //     // return;
+                    //     // if (data.response == 'error') {
+                    //     //     swal("There was some error in downloading the file. Please refresh the page and try again. If the issue persists, contact us");
+                    //     // } else {
+                    //     //     return false;
+                    //     // }
+                    // //})
+                } else {
+                    return false;
+                }
+            }).catch(err => {
+                Swal.fire('Server Error. Please refresh the page and try again. If the issue persists, contact us');
+            });
+       
+     } 
 </script>
 <script src="/js/card-list.js"></script>
-
 
 <%- include('../layouts/end-tag.ejs') %>
 

@@ -221,8 +221,66 @@
 */
 
 // const { Result } = require("express-validator");
+const xlsx = require("xlsx");
+const fs = require("fs");
+// const path = require("path");
 
-exports.addZeroes = (string = "") => {
+exports.exportToExcel = async (data, fileNameFromController, res) => {
+	let dataToWriteToExcelSheet = data;
+	const ws = xlsx.utils.json_to_sheet(dataToWriteToExcelSheet);
+	const wb = xlsx.utils.book_new();
+	xlsx.utils.book_append_sheet(wb, ws, "Responses");
+	let i = 0;
+	let writeFile = true;
+	let fileName = fileNameFromController;
+	try {
+		while (writeFile) {
+			if (i == 0) {
+				fileName = `${fileName}.xlsx`;
+			} else {
+				fileName = `${fileName}(${i}).xlsx`;
+			}
+			if (fs.existsSync(fileName)) {
+				i++;
+				continue;
+			} else {
+				xlsx.writeFile(wb, fileName);
+				writeFile = false;
+			}
+		}
+	} catch (err) {
+		console.error(err);
+	}
+	let downloadLink = `${fileName}`;
+	const result = await res.download(downloadLink);
+	if (result) {
+		//return res.redirect("/cards/card-list");
+		return true;
+	}
+	//return downloadLink;
+};
+exports.addHypenToCardNumber = cardNumber => {
+	cardNumber = addZeroes(cardNumber);
+	let totalLengthofCardNumber = cardNumber.length;
+	let separatedCardNumber = [];
+	let splitValue;
+	let spValue = 4;
+	splitValue = spValue;
+
+	let endOfLoop = totalLengthofCardNumber / splitValue;
+
+	for (let i = 0; i < endOfLoop; i++) {
+		totalLengthofCardNumber = totalLengthofCardNumber - spValue;
+
+		let splittedCardValue = cardNumber.substr(totalLengthofCardNumber, spValue);
+		separatedCardNumber.push(splittedCardValue);
+		splitValue += spValue;
+	}
+	separatedCardNumber = reverseArray(separatedCardNumber);
+	separatedCardNumber = separatedCardNumber.toString().replace(/,/g, "-");
+	return separatedCardNumber;
+};
+const addZeroes = (string = "") => {
 	const fixedLength = 16;
 	let length = string.length;
 	const loopCount = fixedLength - length;
@@ -232,7 +290,9 @@ exports.addZeroes = (string = "") => {
 	}
 	return string;
 };
-exports.reverseArray = (array = []) => {
+exports.addZeroes = addZeroes;
+
+const reverseArray = (array = []) => {
 	let newArray = [];
 
 	for (let i = array.length - 1; i >= 0; i--) {
@@ -240,6 +300,8 @@ exports.reverseArray = (array = []) => {
 	}
 	return newArray;
 };
+
+exports.reverseArray = reverseArray;
 exports.reverseString = (string = "") => {
 	let newString;
 	let j = 0;
