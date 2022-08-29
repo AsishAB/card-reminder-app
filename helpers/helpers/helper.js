@@ -236,8 +236,10 @@ exports.exportToExcel = async (data, fileNameFromController, res) => {
 	try {
 		while (writeFile) {
 			if (i == 0) {
+				fileName = fileNameFromController;
 				fileName = `${fileName}.xlsx`;
 			} else {
+				fileName = fileNameFromController;
 				fileName = `${fileName}(${i}).xlsx`;
 			}
 			if (fs.existsSync(fileName)) {
@@ -252,10 +254,22 @@ exports.exportToExcel = async (data, fileNameFromController, res) => {
 		console.error(err);
 	}
 	let downloadLink = `${fileName}`;
+	let deleteFile;
 	const result = await res.download(downloadLink);
 	if (result) {
-		//return res.redirect("/cards/card-list");
+		fs.unlink(`${fileName}`, err => {
+			if (err) {
+				console.log(err);
+			} else {
+				deleteFile = true;
+			}
+		});
+	}
+	console.log(deleteFile);
+	return;
+	if (deleteFile) {
 		return true;
+		//return res.redirect("/cards/card-list");
 	}
 	//return downloadLink;
 };
