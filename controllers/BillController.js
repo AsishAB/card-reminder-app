@@ -96,9 +96,7 @@ exports.getCardList = async (req, res, next) => {
 				element.TCR_CardRewardRate == undefined
 			) {
 				element.TCR_CardRewardRate = "N/A";
-			} else {
-				element.TCR_CardRewardRate += "th of every month";
-			}
+			} 
 			if (
 				element.TCR_CardBillGenDate == "" ||
 				element.TCR_CardBillGenDate == null ||
