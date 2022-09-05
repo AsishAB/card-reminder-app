@@ -155,6 +155,7 @@ exports.addCardReminder = async (req, res, next) => {
 	const updatedBy = userId;
 	const encryptedCardNumber = Crypt.encrypt(cardnumber, "public.pem");
 	const encryptedCardCVV = Crypt.encrypt(cardcvv, "public.pem");
+
 	const CardReminder = new CardReminderModel({
 		TCR_BankName: cardbankname,
 		TCR_CardName: cardname,
@@ -261,6 +262,7 @@ exports.exportToExcel = async (req, res, next) => {
 	const userId = req.user._id;
 	const data = {};
 	let arrayToExportToExcel = [];
+	const excelSheetArr = Helper.excelSheetArr;
 
 	try {
 		const cardDetail = await CardReminderModel.find({
@@ -290,18 +292,18 @@ exports.exportToExcel = async (req, res, next) => {
 				"private.pem"
 			);
 			let exportDataToExcel = {
-				"Bank Name": element.TCR_BankName.TBM_BankName,
-				"Card Name": element.TCR_CardName,
-				"Card Number": element.TCR_CardNumber,
-				"Card Expiry Date (MM/YY)":
+				[excelSheetArr[0]]: element.TCR_BankName.TBM_BankName,
+				[excelSheetArr[1]]: element.TCR_CardName,
+				[excelSheetArr[2]]: element.TCR_CardNumber,
+				[excelSheetArr[3]]:
 					element.TCR_CardExpiryMonth + "/" + element.TCR_CardExpiryYear,
-				"Card CVV": element.TCR_CardSecretCode,
-				"Card Limit": element.TCR_CardLimit,
-				"Card Charges": element.TCR_CardCharges,
-				"Reward Rate": element.TCR_CardRewardRate,
-				"Card Bill Generation Date": element.TCR_CardBillGenDate,
-				"Card Bill Due Date": element.TCR_CardBillDueDate,
-				"Card Charges": element.TCR_BankName.TBM_BankName,
+				[excelSheetArr[4]]: element.TCR_CardSecretCode,
+				[excelSheetArr[5]]: element.TCR_CardLimit,
+				[excelSheetArr[6]]: element.TCR_CardCharges,
+				[excelSheetArr[7]]: element.TCR_CardRewardRate,
+				[excelSheetArr[8]]: element.TCR_CardBillGenDate,
+				[excelSheetArr[9]]: element.TCR_CardBillDueDate,
+				[excelSheetArr[10]]: element.TCR_BankName.TBM_BankName,
 			};
 			arrayToExportToExcel.push(exportDataToExcel);
 		});
