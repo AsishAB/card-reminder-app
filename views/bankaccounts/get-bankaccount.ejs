@@ -1,0 +1,64 @@
+<%- include('../layouts/main-layout.ejs') %>
+
+    <main>
+       
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <a href="/bankaccount/add-bankaccount" class="btn btn-primary">Add Bank Account</a>
+                </div>
+
+            </div>
+
+        </div>
+        <% if (countbankAccountDetails > 0) { %>
+        <div class="container">
+            <div class="row">
+                <table class="table" id="bankaccount-list">
+                    <thead>
+                        <tr>
+                        <th scope="col">Bank Name</th>
+                        <th scope="col">Account Number</th>
+                        <th scope="col">IFSC Code</th>
+                        <th scope="col">Total Number of Credit Cards</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i = 0; i < countbankAccountDetails; i++) { %>
+                        <tr>
+                            <td><%= bankAccountDetails[i].TBAM_BankName.TBM_BankName %></td>
+                            <td><%= bankAccountDetails[i].BankAccountNumber %></td>
+                            <td><%= bankAccountDetails[i].TBAM_IFSCCode %></td>
+                            <td><%= bankAccountDetails[i].TBAM_CreditCards %></td>
+                            <td><%- bankAccountDetails[i].action %></td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <% } else { %>
+            <div class="card mt-5 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">No Bank Account Added</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">You have added a bank</h6>
+                    
+                    <a href="/bankaccount/add-bankaccount" class="card-link">Add A Bank Account</a>
+                </div>
+            </div>
+
+        <% } %>
+    </main>
+
+<%- include('../layouts/footer.ejs') %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = new DataTable('#bankaccount-list');
+    });
+     
+</script>
+
+<%- include('../layouts/end-tag.ejs') %>

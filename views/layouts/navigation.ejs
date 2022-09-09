@@ -14,15 +14,20 @@
           </li>
           <% }%>
           <% if (isAuthenticated) { %>
-           <li class="nav-item dropdown">
+          <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Action
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="/users/dashboard">Dashboard</a></li>
                 <li><a class="dropdown-item" href="/cards/card-list">My Cards</a></li>
-                <li><a class="dropdown-item" href="/cards/add-billreminder">Add Card</a></li>
-                <li><a class="dropdown-item" href="/bank/bank-list">Bank List </a></li>
+                <!-- <li><a class="dropdown-item" href="/cards/add-billreminder">Add Card</a></li> -->
+                <li><a class="dropdown-item" href="/bankaccount/bankaccount-list">Bank Account List </a></li>
+                <!-- <li><a class="dropdown-item" href="/bankaccount/add-bankaccount">Add Bank Account </a></li> -->
+                <% if (isUserRole === 'admin') { %>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/bank/bank-list">Bank List </a></li>
+                <% }  %>
                 
                   <li><hr class="dropdown-divider"></li>
                   <li>

@@ -1,5 +1,5 @@
 const User = require("../models/UserModel");
-const CardReminderModel = require("../models/CardReminderModel");
+const CardReminderModel = require("../models/EWalletModel");
 // const ResetPassword = require("../models/ResetPasswordModel");
 const argon2 = require("argon2");
 const crypto = require("crypto"); //Default Node JS package; used to generate toekn for password-reset, etc.
@@ -252,6 +252,7 @@ exports.loginUser = (req, res, next) => {
 					.then(doMatch => {
 						if (doMatch) {
 							req.session.isLoggedIn = true;
+							req.session.isUserRole = result.TUM_Role;
 
 							req.session.user = result;
 							req.session.save(err => {

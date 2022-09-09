@@ -10,10 +10,11 @@ const MongoDBStore = require("connect-mongodb-session")(session);
 
 const User = require("./models/UserModel");
 const mongoURL = require("./helpers/gitignores/mongodburl");
-const billReminderRoutes = require("./routes/billRoute");
+const billReminderRoutes = require("./routes/walletRoute");
 const userRoutes = require("./routes/userRoutes");
 const bankRoutes = require("./routes/bankRoutes");
 const indexRoute = require("./routes/indexRoute");
+const bankAccountRoute = require("./routes/bankAccountRoute");
 const rootDir = require("./helpers/user-defined-path");
 const HtmlError = require("./controllers/HtmlErrorController");
 
@@ -33,7 +34,7 @@ app.set("views", [
 	path.join(rootDir, "views"),
 	path.join(rootDir, "views/admin"),
 	path.join(rootDir, "views/htmlerrors"),
-
+	path.join(rootDir, "views/bankaccounts"),
 	path.join(rootDir, "views/registerandauth"),
 ]);
 
@@ -52,13 +53,13 @@ app.use(
 //app.use(csrfProtection); //Must be used after configuring session session({})
 
 app.use((req, res, next) => {
-	res.locals.isAuthenticated = req.session.isLoggedIn; // Used in all views (navigation.ejs)
+	res.locals.isAuthenticated = req.session.isLoggedIn; // isLoggedIn is in UserController->loginUser . isAuthenticated is Used in all views (navigation.ejs)
+	res.locals.isUserRole = req.session.isUserRole; // "
 	//res.locals.csrfToken = req.csrfToken();
 	next();
 });
 
 app.use((req, res, next) => {
-	// throw new Error('Sync Dummy');
 	if (!req.session.user) {
 		return next();
 	}
@@ -80,6 +81,7 @@ app.use("/", indexRoute);
 app.use("/cards", billReminderRoutes);
 app.use("/users", userRoutes);
 app.use("/bank", bankRoutes);
+app.use("/bankaccount", bankAccountRoute);
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(

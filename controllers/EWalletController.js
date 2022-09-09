@@ -1,4 +1,4 @@
-const CardReminderModel = require("../models/CardReminderModel");
+const CardReminderModel = require("../models/EWalletModel");
 
 const BankModel = require("../models/BankModel");
 const Crypt = require("../helpers/encrypt_decrypt/encryptDecryptText");
@@ -20,7 +20,6 @@ exports.getAddCardReminder = async (req, res, next) => {
 
 exports.editCard = async (req, res, next) => {
 	const cardId = req.params.cardId;
-	// const userId = "6305efe8c4f33170a06934b2";
 	const userId = req.user._id;
 	const bankList = await BankModel.find();
 	const countBankList = await BankModel.find().countDocuments();
@@ -96,7 +95,7 @@ exports.getCardList = async (req, res, next) => {
 				element.TCR_CardRewardRate == undefined
 			) {
 				element.TCR_CardRewardRate = "N/A";
-			} 
+			}
 			if (
 				element.TCR_CardBillGenDate == "" ||
 				element.TCR_CardBillGenDate == null ||

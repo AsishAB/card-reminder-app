@@ -1,0 +1,74 @@
+<%- include('../layouts/main-layout.ejs') %>
+<link rel="stylesheet" href="/css/add-bankaccount.css">
+
+
+<!-- ---------------------------------------------------------------------------------------------------------- -->
+<main class="body">
+ <div class="container">
+        <div class="row">
+			<div class="col-md-5 mx-auto">
+			<div id="first">
+				<div class="myform form ">
+					 <div class="logo mb-3">
+						 <div class="col-md-12 text-center">
+							<h1>Add Bank Account</h1>
+						 </div>
+					</div>
+                   <form action="/bankaccount/add-bankaccount" method="post">
+                           <div class="form-group">
+                              <label for="exampleInputEmail1">Bank Name</label>
+                             	<select class="form-select" aria-label="Bank Name" name="bankAccountName" id="bankAccountName">
+                                    <option value='0' selected>Select your bank</option>
+                                    <% for (let i = 0; i < countBankList; i++) { %>
+                                    <option value="<%= bankList[i]._id.toString() %>"> <%= bankList[i].TBM_BankName %> </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                           <div class="form-group">
+                              <label for="exampleInputEmail1">Bank Account Number</label>
+                              <input type="password" name="bankAccountNumber" id="bankAccountNumber"  class="form-control" >
+                           </div>
+                           <div class="form-group">
+                              <label for="exampleInputEmail1">Confirm Bank Account Number</label>
+                              <input type="text" name="confirmBankAccountNumber" id="confirmBankAccountNumber"  class="form-control" >
+                           </div>
+                           <div class="form-group">
+                              <label for="exampleInputEmail1"> IFSC Code (Optional) </label>
+                              <input type="text" name="bankifsccode" id="bankifsccode"  class="form-control" >
+                           </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1"> Internet Banking Username </label>
+                              <input type="text" name="interetBankingUserName" id="interetBankingUserName"  class="form-control" >
+                           </div>
+                           <div class="form-group">
+                              <label for="exampleInputEmail1"> Internet Banking Password </label>
+                              <input type="password" name="interetBankingPassword" id="interetBankingPassword"  class="form-control" >
+                           </div>
+                           <div class="form-group">
+                              <label for="exampleInputEmail1"> Total Number of Credit Cards from this bank </label>
+                              <input type="text" name="totalNoOfCreditCards" id="totalNoOfCreditCards"  class="form-control" value="0">
+                           </div>
+                           <div class="form-group">
+                              <label for="exampleInputEmail1"> Toll Free Numbers (to contact the bank) </label>
+                              <textarea name="tollFreeNumbers" id="tollFreeNumbers"  class="form-control"></textarea>
+                           </div>
+                           <div class="form-group">
+                              <label for="exampleInputEmail1"> Email Id (to contact the bank) </label>
+                              <textarea name="bankEmailAddress" id="bankEmailAddress"  class="form-control"></textarea>
+                           </div>
+                           <div class="col-md-12 text-center mt-3">
+                              <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Submit</button>
+                           </div>
+                           
+                           
+                           
+                        </form>
+                    </div>
+			    </div>
+			</div>
+		</div>
+      </div>
+</main>   
+<%- include('../layouts/footer.ejs') %>
+
+<%- include('../layouts/end-tag.ejs') %>
