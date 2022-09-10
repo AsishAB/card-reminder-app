@@ -16,10 +16,34 @@ router.get(
 	BankAccountController.getAddBankAccountList
 );
 
+router.get(
+	"/edit-bankaccount/:bankAccountId",
+	AuthMiddleware,
+	BankAccountController.editBankAccount
+);
+
 router.post(
 	"/add-bankaccount",
 	AuthMiddleware,
 	BankAccountController.addBankAccount
+);
+
+router.get(
+	"/view-bankaccount/:bankAccountId",
+	AuthMiddleware,
+	BankAccountController.viewBankAccount
+);
+
+router.delete(
+	"/delete-bankaccount/:bankAccountId",
+	AuthMiddleware,
+	BankAccountController.deleteBankAccount
+);
+
+router.get(
+	"/exportToExcel",
+	AuthMiddleware,
+	BankAccountController.exportToExcel
 );
 
 module.exports = router;

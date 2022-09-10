@@ -5,16 +5,49 @@
 <!-- ---------------------------------------------------------------------------------------------------------- -->
 <main class="body">
  <div class="container">
+   <%  
+         if (bankAccountDetail) {
+
+            htmlAction = "Edit";
+
+            bankAccountId = bankAccountDetail._id;
+            bankAccountName = bankAccountDetail.TBAM_BankName;
+            bankAccountNumber = bankAccountDetail.TBAM_AccountNumber;
+            confirmBankAccountNumber = bankAccountDetail.TBAM_AccountNumber;
+            bankifsccode = bankAccountDetail.TBAM_IFSCCode;
+            interetBankingUserName = bankAccountDetail.TBAM_InternetBankingUserName;
+            interetBankingPassword = bankAccountDetail.TBAM_InternetBankingPassword;
+            totalNoOfCreditCards = bankAccountDetail.TBAM_CreditCards;
+            tollFreeNumbers = bankAccountDetail.TBAM_ContactNumbers;
+            bankEmailAddress = bankAccountDetail.TBAM_ContactEmailIds;
+
+         } else {
+            htmlAction = "Add";
+
+            bankAccountId = '';
+            bankAccountName = '';
+            bankAccountNumber = '';
+            confirmBankAccountNumber = '';
+            bankifsccode = '';
+            interetBankingUserName = '';
+            interetBankingPassword = '';
+            totalNoOfCreditCards = 0;
+            tollFreeNumbers = '';
+            bankEmailAddress = '';
+         }
+
+   %>
         <div class="row">
 			<div class="col-md-5 mx-auto">
 			<div id="first">
 				<div class="myform form ">
 					 <div class="logo mb-3">
 						 <div class="col-md-12 text-center">
-							<h1>Add Bank Account</h1>
+							<h1><%= htmlAction %> Bank Account</h1>
 						 </div>
 					</div>
                    <form action="/bankaccount/add-bankaccount" method="post">
+                     <input type="hidden" id="bankAccountId" name="bankAccountId" value="<%= bankAccountId %>">
                            <div class="form-group">
                               <label for="exampleInputEmail1">Bank Name</label>
                              	<select class="form-select" aria-label="Bank Name" name="bankAccountName" id="bankAccountName">
@@ -26,35 +59,35 @@
                             </div>
                            <div class="form-group">
                               <label for="exampleInputEmail1">Bank Account Number</label>
-                              <input type="password" name="bankAccountNumber" id="bankAccountNumber"  class="form-control" >
+                              <input type="password" name="bankAccountNumber" id="bankAccountNumber"  class="form-control" value="<%= bankAccountNumber %>">
                            </div>
                            <div class="form-group">
                               <label for="exampleInputEmail1">Confirm Bank Account Number</label>
-                              <input type="text" name="confirmBankAccountNumber" id="confirmBankAccountNumber"  class="form-control" >
+                              <input type="text" name="confirmBankAccountNumber" id="confirmBankAccountNumber"  class="form-control" value="<%= confirmBankAccountNumber %>">
                            </div>
                            <div class="form-group">
                               <label for="exampleInputEmail1"> IFSC Code (Optional) </label>
-                              <input type="text" name="bankifsccode" id="bankifsccode"  class="form-control" >
+                              <input type="text" name="bankifsccode" id="bankifsccode"  class="form-control" value="<%= bankifsccode %>">
                            </div>
                             <div class="form-group">
                               <label for="exampleInputEmail1"> Internet Banking Username </label>
-                              <input type="text" name="interetBankingUserName" id="interetBankingUserName"  class="form-control" >
+                              <input type="text" name="interetBankingUserName" id="interetBankingUserName"  class="form-control" value="<%= interetBankingUserName %>">
                            </div>
                            <div class="form-group">
                               <label for="exampleInputEmail1"> Internet Banking Password </label>
-                              <input type="password" name="interetBankingPassword" id="interetBankingPassword"  class="form-control" >
+                              <input type="password" name="interetBankingPassword" id="interetBankingPassword"  class="form-control" value="<%= interetBankingPassword %>">
                            </div>
                            <div class="form-group">
                               <label for="exampleInputEmail1"> Total Number of Credit Cards from this bank </label>
-                              <input type="text" name="totalNoOfCreditCards" id="totalNoOfCreditCards"  class="form-control" value="0">
+                              <input type="text" name="totalNoOfCreditCards" id="totalNoOfCreditCards"  class="form-control" value="<%= totalNoOfCreditCards %>">
                            </div>
                            <div class="form-group">
                               <label for="exampleInputEmail1"> Toll Free Numbers (to contact the bank) </label>
-                              <textarea name="tollFreeNumbers" id="tollFreeNumbers"  class="form-control"></textarea>
+                              <textarea name="tollFreeNumbers" id="tollFreeNumbers"  class="form-control" placeholder="1800-bank1, 1800-bank2,...."><%= tollFreeNumbers %></textarea>
                            </div>
                            <div class="form-group">
                               <label for="exampleInputEmail1"> Email Id (to contact the bank) </label>
-                              <textarea name="bankEmailAddress" id="bankEmailAddress"  class="form-control"></textarea>
+                              <textarea name="bankEmailAddress" id="bankEmailAddress"  class="form-control" placeholder="cc1@example1.com, cc2@example2.com"><%= bankEmailAddress %></textarea>
                            </div>
                            <div class="col-md-12 text-center mt-3">
                               <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Submit</button>

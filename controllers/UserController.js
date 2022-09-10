@@ -1,5 +1,6 @@
 const User = require("../models/UserModel");
 const CardReminderModel = require("../models/EWalletModel");
+const BankAccountModel = require("../models/BankAccountModel");
 // const ResetPassword = require("../models/ResetPasswordModel");
 const argon2 = require("argon2");
 const crypto = require("crypto"); //Default Node JS package; used to generate toekn for password-reset, etc.
@@ -9,6 +10,7 @@ const crypto = require("crypto"); //Default Node JS package; used to generate to
 // const sendGridAPIKey = require("../helpers/secret-data/sendgrid_api");
 // const sendEMail = require("../helpers/secret-data/personal-email");
 const Validation = require("../helpers/helpers/validation");
+const UserModel = require("../models/UserModel");
 
 // const transporter = nodemailer.createTransport(
 // 	sendGridTransport({
@@ -20,8 +22,9 @@ const Validation = require("../helpers/helpers/validation");
 
 exports.getRegisterPage = (req, res, next) => {
 	//const isLoggedIn = req.session.isLoggedIn ? req.session.isLoggedIn : false;
+
 	if (req.session.isLoggedIn) {
-		return res.redirect("/users/dsahboard");
+		return res.status(403).redirect("/users/dashboard");
 	}
 	res.render("users/register-user.ejs", {
 		pageTitle: "Register New User",
@@ -36,6 +39,28 @@ exports.getRegisterPage = (req, res, next) => {
 	});
 };
 
+exports.getRegisterPageForAdmin = async (req, res, next) => {
+	//const isLoggedIn = req.session.isLoggedIn ? req.session.isLoggedIn : false;
+	const user = req.user._id;
+	const userDetail = await UserModel.findById(user);
+	if (userDetail.TUM_Role !== "admin") {
+		console.log(
+			"Inside UserController -> getRegisterPageForAdmin -> Only Admins can enter"
+		);
+		return res.status(403).redirect("/users/dashboard");
+	}
+	res.render("users/register-user-admin.ejs", {
+		pageTitle: "Register Admin",
+		errorMessage: "",
+		validationErrors: [],
+		oldInput: {
+			firstName: "",
+			lastName: "",
+			emailId: "",
+			phoneNo: "",
+		},
+	});
+};
 exports.registerUser = (req, res, next) => {
 	//console.log(req.body);
 	const firstName = req.body.firstName;
@@ -43,6 +68,7 @@ exports.registerUser = (req, res, next) => {
 	const emailId = req.body.emailId;
 	const phoneNo = req.body.phoneNo;
 	const password = req.body.password;
+	const userRole = req.body.userRole != "" ? req.body.userRole : "customer";
 	const confirm_password = req.body.confirm_password;
 	const validationError = [];
 	var errorMsg = "";
@@ -140,14 +166,19 @@ exports.registerUser = (req, res, next) => {
 							TUM_Email: emailId,
 							TUM_MobileNo: phoneNo,
 							TUM_Password: hashedPassword,
-							TUM_Role: "customer",
+							TUM_Role: userRole,
 						});
 						user
 							.save()
 							.then(() => {
 								console.log("Inside UserController -> registerUser");
 								console.log("User has been successfully registered");
-								res.redirect("/users/login");
+								if (userRole !== "admin") {
+									return res.redirect("/users/login");
+								} else {
+									return res.redirect("/users/dashboard");
+								}
+
 								// return transporter.sendMail({
 								// 	to: sendEMail.sendTo,
 								// 	from: "asish24in@gmail.com",
@@ -155,11 +186,15 @@ exports.registerUser = (req, res, next) => {
 								// 	html: "<h1> Your Registration Is Succesful </h1>",
 								// });
 							})
-							.then(() => {
-								console.log("Inside UserController -> registerUser");
-								console.log("User has been successfully registered");
-								return res.redirect("/user/login");
-							})
+							// .then(() => {
+							// 	console.log("Inside UserController -> registerUser");
+							// 	console.log("User has been successfully registered");
+							// 	if (userRole !== "admin") {
+							// 		return res.redirect("/users/login");
+							// 	} else {
+							// 		return res.redirect("/users/dashboard");
+							// 	}
+							// })
 							.catch(err => {
 								const error = new Error(err);
 								error.httpStatusCode = 500;
@@ -185,7 +220,7 @@ exports.registerUser = (req, res, next) => {
 
 exports.getLoginPage = (req, res, next) => {
 	if (req.session.isLoggedIn) {
-		return res.redirect("/users/dsahboard");
+		return res.status(403).redirect("/users/dashboard");
 	}
 	res.render("users/login-user.ejs", {
 		pageTitle: "Login User",
@@ -317,9 +352,14 @@ exports.getDashboard = async (req, res, next) => {
 	const cardDetail = await CardReminderModel.find({
 		TCR_CardCreatedBy: userId,
 	});
+	const bankAccountDetail = await BankAccountModel.find({
+		TBAM_CreatedBy: userId,
+	});
 
 	let totalLimit = 0;
 	let totalCardCharges = 0;
+	let totalBankAccounts = bankAccountDetail.length;
+
 	const cardSubDetails = {};
 	cardSubDetails.totalCards = cardDetail.length;
 	for (let i = 0; i < cardDetail.length; i++) {
@@ -336,5 +376,6 @@ exports.getDashboard = async (req, res, next) => {
 		pageTitle: "Dashboard",
 		cardSubDetails: cardSubDetails,
 		userName: userName,
+		totalBankAccounts: totalBankAccounts,
 	});
 };

@@ -18,8 +18,9 @@ router.post(
 
 router.get("/edit-card/:cardId", AuthMiddleware, EWalletController.editCard);
 router.get("/card-list", AuthMiddleware, EWalletController.getCardList);
-// router.post("/view-card", EWalletController.viewCard);
+
 router.get("/view-card/:cardId", AuthMiddleware, EWalletController.viewCard);
+
 router.delete(
 	"/delete-card/:cardId",
 	AuthMiddleware,

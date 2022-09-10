@@ -4,10 +4,10 @@
        
         <div class="container">
             <div class="row">
-                <div class="col-md-6 text-center">
-                    <a href="/bankaccount/add-bankaccount" class="btn btn-primary">Add Bank Account</a>
+                <div class="col-md-12 text-center">
+                    <a href="/bankaccount/add-bankaccount" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> Add Bank Account</a>
+                    <button type="button" onclick="alertMessageBankAcc()" class="btn btn-success"> <i class="fas fa-file-excel"></i> Export to Excel Sheet</a>
                 </div>
-
             </div>
 
         </div>
@@ -51,14 +51,45 @@
 
         <% } %>
     </main>
+<div class="modal fade" id="bankAccSecretDetailsModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Bank Account Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" tabindex="-1" >
+             <div class="credit-card card-ui">
+                
+                    <img src="" id="bank-image" height="100" width="100%" class="text-center">
+                
 
+                <div class="form-body mt-2">
+                    <table class="table border border-secondary" id="bankaccount-table">
+                    </table>
+                  
+                </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
 <%- include('../layouts/footer.ejs') %>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        let table = new DataTable('#bankaccount-list');
+        let table = new DataTable('#bankaccount-list',{
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'pdf', 'print'
+            ]
+        });
     });
      
 </script>
-
+<script src="/js/bank-account-list.js"></script>
 <%- include('../layouts/end-tag.ejs') %>

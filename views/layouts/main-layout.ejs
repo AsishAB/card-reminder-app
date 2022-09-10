@@ -14,11 +14,31 @@
     href="/css/font-awesome-6_1_1.css" />
 
     <link rel="stylesheet" type="text/css" href="/css/datatable.css"/>
- 
+<style>
+    /* Paste this css to your style sheet file or under head tag */
+    /* This only works with JavaScript, 
+    if it's not present, don't show loader */
+    .no-js #loader { display: none;  }
+    .js #loader { display: block; position: absolute; left: 100px; top: 0; }
+    .se-pre-con {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url("/assets/loading-screen/Preloader.gif") center no-repeat;
+         -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+    
+</style>
 
 </head>
 
 <body>
+    
+    <div class="se-pre-con" style="display: none;" id="loader"></div>
     <%- include('./navigation.ejs') %>
 
 

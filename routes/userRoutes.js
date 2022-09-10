@@ -15,6 +15,12 @@ router.get("/register", UserController.getRegisterPage);
 
 router.post("/register-user", UserController.registerUser);
 
+router.get(
+	"/register-user-admin",
+	AuthMiddleware,
+	UserController.getRegisterPageForAdmin
+);
+
 router.get("/dashboard", AuthMiddleware, UserController.getDashboard);
 
 // router.get("/reset-password", UserController.getResetPassword);

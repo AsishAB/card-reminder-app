@@ -1,7 +1,7 @@
 function viewCard(id, btn = "") {
 	// const csrf = btn.parentNode.querySelector("[name=_csrf]").value;
 	//const productElement = btn.closest(".col-md-6");
-
+	document.getElementById("loader").style.display = "block";
 	fetch("/cards/view-card/" + id, {
 		method: "GET",
 		// body: JSON.stringify({
@@ -15,6 +15,7 @@ function viewCard(id, btn = "") {
 			return result.json();
 		})
 		.then(data => {
+			document.getElementById("loader").style.display = "none";
 			if (data.response == "success") {
 				//console.log(data);
 				document.getElementById("card-image").src =
@@ -34,6 +35,7 @@ function viewCard(id, btn = "") {
 			}
 		})
 		.catch(err => {
+			document.getElementById("loader").style.display = "none";
 			console.log(err);
 		});
 }
@@ -41,7 +43,7 @@ function viewCard(id, btn = "") {
 function deleteCard(id, btn = "") {
 	// const csrf = btn.parentNode.querySelector("[name=_csrf]").value;
 	//const productElement = btn.closest(".col-md-6");
-
+	document.getElementById("loader").style.display = "block";
 	fetch("/cards/delete-card/" + id, {
 		method: "DELETE",
 		// headers: {
@@ -53,6 +55,7 @@ function deleteCard(id, btn = "") {
 			return result.json();
 		})
 		.then(data => {
+			document.getElementById("loader").style.display = "none";
 			console.log(data);
 			if (data.response == "success") {
 				console.log("Inside public folder -> js -> card-list.js");
@@ -65,6 +68,7 @@ function deleteCard(id, btn = "") {
 			}
 		})
 		.catch(err => {
+			document.getElementById("loader").style.display = "none";
 			console.log(err);
 		});
 }

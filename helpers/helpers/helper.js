@@ -19,6 +19,19 @@ const excelSheetArr = [
 
 exports.excelSheetArr = excelSheetArr;
 
+const excelSheetArrForBankAccount = [
+	"Bank Name",
+	"Account Number",
+	"IFSC Code",
+	"Internet Banking Username",
+	"Internet Banking Password",
+	"Number of Credit Cards with this bank",
+	"Toll free Numbers or Other Contact numbers",
+	"Email Ids for the Bank",
+];
+
+exports.excelSheetArrForBankAccount = excelSheetArrForBankAccount;
+
 exports.exportToExcel = async (data, fileNameFromController, res) => {
 	let dataToWriteToExcelSheet = data;
 	const ws = xlsx.utils.json_to_sheet(dataToWriteToExcelSheet);

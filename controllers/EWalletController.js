@@ -153,6 +153,12 @@ exports.addCardReminder = async (req, res, next) => {
 	const encryptedCardNumber = Crypt.encrypt(cardnumber, "public.pem");
 	const encryptedCardCVV = Crypt.encrypt(cardcvv, "public.pem");
 
+	if (cardexpirymonth < 0) {
+		cardexpirymonth = 1;
+	}
+	if (cardexpirymonth > 12) {
+		cardexpirymonth = 12;
+	}
 	const CardReminder = new CardReminderModel({
 		TCR_BankName: cardbankname,
 		TCR_CardName: cardname,
