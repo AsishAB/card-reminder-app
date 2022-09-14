@@ -1,7 +1,15 @@
 // const { Result } = require("express-validator");
 const xlsx = require("xlsx");
 const fs = require("fs");
-// const path = require("path");
+const path = require("path");
+const date = new Date();
+const current_date =
+	date.getFullYear() + "_" + (date.getMonth() + 1) + "_" + date.getDate();
+const current_time =
+	date.getHours() + "_" + date.getMinutes() + "_" + date.getSeconds();
+const date_time = current_date + "_" + current_time;
+
+exports.date_time = date_time;
 
 const excelSheetArr = [
 	"Bank Name",
@@ -32,53 +40,42 @@ const excelSheetArrForBankAccount = [
 
 exports.excelSheetArrForBankAccount = excelSheetArrForBankAccount;
 
-exports.exportToExcel = async (data, fileNameFromController, res) => {
+const deleteFileFromStorage = (filePath = "") => {
+	// console.log("Inside helpers -> deleteFileFromStorage " + filePath);
+	fs.unlink(`${filePath}`, err => {
+		// fs.unlink(fileStorage, err => {
+		if (err) {
+			console.log(err);
+			return { response: err, response: false };
+		}
+	});
+	return { response: "success", response: true };
+};
+exports.deleteFileFromStorage = deleteFileFromStorage;
+
+exports.exportToExcel = async (data, fileNameFromController, res, next) => {
 	let dataToWriteToExcelSheet = data;
 	const ws = xlsx.utils.json_to_sheet(dataToWriteToExcelSheet);
 	const wb = xlsx.utils.book_new();
 	xlsx.utils.book_append_sheet(wb, ws, "Responses");
 	let i = 0;
-	let writeFile = true;
-	let fileName = fileNameFromController;
+	// let writeFile = true;
+	let fileName = fileNameFromController + "_" + date_time + ".xlsx";
 	try {
-		while (writeFile) {
-			if (i == 0) {
-				fileName = fileNameFromController;
-				fileName = `${fileName}.xlsx`;
-			} else {
-				fileName = fileNameFromController;
-				fileName = `${fileName}(${i}).xlsx`;
-			}
-			if (fs.existsSync(fileName)) {
-				i++;
-				continue;
-			} else {
-				xlsx.writeFile(wb, fileName);
-				writeFile = false;
-			}
-		}
+		xlsx.writeFile(wb, fileName);
 	} catch (err) {
 		console.error(err);
 	}
 	let downloadLink = `${fileName}`;
-	let deleteFile;
-	const result = await res.download(downloadLink);
-	if (result) {
-		fs.unlink(`${fileName}`, err => {
-			if (err) {
-				console.log(err);
-			} else {
-				deleteFile = true;
-			}
-		});
-	}
-	console.log(deleteFile);
+	res.status(200).download(downloadLink, async err => {
+		if (err) {
+			console.log("Cannot download the file \n", err);
+		} else {
+			deleteFileFromStorage(downloadLink);
+		}
+	});
+
 	return;
-	if (deleteFile) {
-		return true;
-		//return res.redirect("/cards/card-list");
-	}
-	//return downloadLink;
 };
 exports.addHypenToCardNumber = cardNumber => {
 	cardNumber = addZeroes(cardNumber);

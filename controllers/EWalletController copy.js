@@ -275,7 +275,7 @@ exports.exportToExcel = async (req, res, next) => {
 			console.log("Inside BillController -> viewCard =. Card Not Found");
 			data.response = "error";
 			data.message = "No Card Not Found";
-			//return res.json(data);
+			// return res.json(data);
 			return res.redirect("/cards/card-list");
 		}
 		cardDetail.forEach(element => {
@@ -306,28 +306,38 @@ exports.exportToExcel = async (req, res, next) => {
 			};
 			arrayToExportToExcel.push(exportDataToExcel);
 		});
-		// setTimeout(() => {
-		//return res.redirect("/cards/card-list");
 
-		await Helper.exportToExcel(
+		const filePath = await Helper.exportToExcel(
 			arrayToExportToExcel,
 			"Credit Card Details",
 			res
 		);
-
+		//console.log(filePath);
+		// return;
+		//if (result.response) {
+		// if (result) {
 		data.response = "success";
 		data.message = "Card Found";
-
+		// let fileDeleted;
+		// if (filePath != "") {
+		// 	fileDeleted = await Helper.deleteFileFromStorage(filePath);
+		// }
+		// console.log(fileDeleted);
 		setTimeout(() => {
 			return res.redirect("/cards/card-list");
 		}, 10000);
+
+		// } else {
+		// 	data.response = "fail";
+		// 	data.message = "Card Found but still problem";
+		// 	console.log("Problem Occured" + data.message);
+		// }
 	} catch (err) {
 		console.log(err);
 		data.response = "error";
 		data.message = "Server Error";
-		data.err = err;
-		return res.json(data);
-		//return res.redirect("/cards/card-list");
+		// return res.json(data);
+		return res.redirect("/cards/card-list");
 	}
 };
 
@@ -359,106 +369,3 @@ exports.deleteCard = async (req, res, next) => {
 		return res.json(data);
 	}
 };
-
-/* Uisng JSON which failed
-
-exports.exportToExcel = async (req, res, next) => {
-	const userId = req.user._id;
-	const data = {};
-	let arrayToExportToExcel = [];
-	const excelSheetArr = Helper.excelSheetArr;
-
-	try {
-		const cardDetail = await CardReminderModel.find({
-			TCR_CardCreatedBy: userId,
-		}).populate("TCR_BankName");
-		if (cardDetail.length == 0) {
-			console.log("Inside BillController -> viewCard =. Card Not Found");
-			data.response = "error";
-			data.message = "No Card Not Found";
-			return res.json(data);
-			//return res.redirect("/cards/card-list");
-		}
-		cardDetail.forEach(element => {
-			element.TCR_CardNumber = Crypt.decrypt(
-				element.TCR_CardNumber,
-				"private.pem"
-			);
-			element.TCR_CardNumber = Helper.addHypenToCardNumber(
-				element.TCR_CardNumber
-			);
-			element.TCR_CardSecretCode = Crypt.decrypt(
-				element.TCR_CardSecretCode,
-				"private.pem"
-			);
-			let exportDataToExcel = {
-				[excelSheetArr[0]]: element.TCR_BankName.TBM_BankName,
-				[excelSheetArr[1]]: element.TCR_CardName,
-				[excelSheetArr[2]]: element.TCR_CardNumber,
-				[excelSheetArr[3]]:
-					element.TCR_CardExpiryMonth + "/" + element.TCR_CardExpiryYear,
-				[excelSheetArr[4]]: element.TCR_CardSecretCode,
-				[excelSheetArr[5]]: element.TCR_CardLimit,
-				[excelSheetArr[6]]: element.TCR_CardCharges,
-				[excelSheetArr[7]]: element.TCR_CardRewardRate,
-				[excelSheetArr[8]]: element.TCR_CardBillGenDate,
-				[excelSheetArr[9]]: element.TCR_CardBillDueDate,
-				[excelSheetArr[10]]: element.TCR_BankName.TBM_BankName,
-			};
-			arrayToExportToExcel.push(exportDataToExcel);
-		});
-		// setTimeout(() => {
-		//return res.redirect("/cards/card-list");
-
-		await Helper.exportToExcel(
-			arrayToExportToExcel,
-			"Credit Card Details",
-			res,
-			next
-		);
-
-		//return res.json(data);
-		// }, 10000);
-		//console.log(filePath);
-		// return;
-		//if (result.response) {
-		// if (result) {
-		data.response = "success";
-		data.message = "Card Found";
-		// setTimeout(() => {
-		// 	console.log("Here");
-		// }, 10000);
-		return res.json(data);
-		// let fileDeleted;
-		// if (filePath != "") {
-		// 	fileDeleted = await Helper.deleteFileFromStorage(filePath);
-		// }
-		// console.log(fileDeleted);
-		// setTimeout(() => {
-		//return res.redirect("/cards/card-list");
-		// }, 10000);
-
-		// } else {
-		// 	data.response = "fail";
-		// 	data.message = "Card Found but still problem";
-		// 	console.log("Problem Occured" + data.message);
-		// }
-	} catch (err) {
-		console.log(err);
-		data.response = "error";
-		data.message = "Server Error";
-		data.err = err;
-		return res.json(data);
-		//return res.redirect("/cards/card-list");
-	}
-};
-
-The download method sets the Content-Disposition header which tells the browser to download it instead of navigating to it … if it were navigating to it in the first place.
-
-You are making the request using Ajax, so the browser isn't navigating to it. The response is passed to your JS and it is the responsibility of your JS to deal with it.
-
-You can take two approaches to this:
-
-Don't use Ajax. Navigate to the URL instead. You can replace the Ajax request with a regular form submission (which will also require that you have body parsing middleware on the server which supports a encoding type supported by forms).
-https://stackoverflow.com/questions/32545632/how-can-i-download-a-file-using-window-fetch.
-*/

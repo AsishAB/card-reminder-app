@@ -72,3 +72,34 @@ function deleteCard(id, btn = "") {
 			console.log(err);
 		});
 }
+
+// function exportToExcel() {
+// 	document.getElementById("loader").style.display = "block";
+// 	fetch("/cards/exportToExcel", {
+// 		method: "POST",
+// 		// body: JSON.stringify({
+// 		// 	cardId: id,
+// 		// }),
+// 		// headers: {
+// 		// 	"Content-Type": " application/json",
+// 		// },
+// 	})
+// 		.then(result => {
+// 			//console.log(result.json());
+// 			return result.json();
+// 		})
+// 		.then(data => {
+// 			// console.log(data);
+// 			document.getElementById("loader").style.display = "none";
+// 			if (data.response == "success") {
+// 				console.log("File Downloaded");
+// 			} else {
+// 				console.log(data.err);
+// 			}
+// 		})
+// 		.catch(err => {
+// 			document.getElementById("loader").style.display = "none";
+// 			console.log("Server Error\n");
+// 			console.log(err);
+// 		});
+// };

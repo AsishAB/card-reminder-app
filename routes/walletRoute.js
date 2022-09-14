@@ -29,4 +29,6 @@ router.delete(
 
 router.get("/exportToExcel", AuthMiddleware, EWalletController.exportToExcel);
 
+// router.post("/exportToExcel", AuthMiddleware, EWalletController.exportToExcel);
+
 module.exports = router;

@@ -97,6 +97,7 @@ app.use(
 	"/bank_images",
 	express.static(path.join(__dirname, "public/file_uploads/bank_images"))
 );
+// app.use("/download", express.static(path.join(__dirname)));
 
 app.use(HtmlError.get404Page); //To display 404 page
 app.use("/500", HtmlError.get500Page); //To display 500 page

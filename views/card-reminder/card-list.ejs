@@ -146,25 +146,12 @@
             .then((result) => {
                 if (result.isConfirmed) {
                     window.location = "/cards/exportToExcel";
-                    // method: "GET",
-                    
-                    // })
-                    // .then(result => {
-                    //     return result.json();
-                    // })
-                    // //.then(data => {
-                    //     // console.log(data);
-                    //     // return;
-                    //     // if (data.response == 'error') {
-                    //     //     swal("There was some error in downloading the file. Please refresh the page and try again. If the issue persists, contact us");
-                    //     // } else {
-                    //     //     return false;
-                    //     // }
-                    // //})
+                    //exportToExcel();
                 } else {
                     return false;
                 }
             }).catch(err => {
+                console.log(err);
                 Swal.fire('Server Error. Please refresh the page and try again. If the issue persists, contact us');
             });
        
