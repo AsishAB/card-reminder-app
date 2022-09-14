@@ -17,7 +17,15 @@ const indexRoute = require("./routes/indexRoute");
 const bankAccountRoute = require("./routes/bankAccountRoute");
 const rootDir = require("./helpers/user-defined-path");
 const HtmlError = require("./controllers/HtmlErrorController");
+const loginUserPageRecaptchaScript =
+	require("./helpers/gitignores/recaptcha-secret").loginUserPageRecaptchaScript;
 
+/*  
+	
+	https://stackoverflow.com/questions/55558402/what-is-the-meaning-of-bodyparser-urlencoded-extended-true-and-bodypar
+	*/
+
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const store = new MongoDBStore({
@@ -53,6 +61,7 @@ app.use(
 //app.use(csrfProtection); //Must be used after configuring session session({})
 
 app.use((req, res, next) => {
+	res.locals.clientSideRecaptcaCode = loginUserPageRecaptchaScript;
 	res.locals.isAuthenticated = req.session.isLoggedIn; // isLoggedIn is in UserController->loginUser . isAuthenticated is Used in all views (navigation.ejs)
 	res.locals.isUserRole = req.session.isUserRole; // "
 	//res.locals.csrfToken = req.csrfToken();
@@ -96,8 +105,9 @@ mongoose
 	.connect(mongoURL)
 	.then(result => {
 		console.log(
-			`Card Reminder app listening on port ${port} - http://localhost:${port}`
+			`E-Wallet app listening on port ${port} - http://localhost:${port}`
 		);
+
 		app.listen(port);
 	})
 	.catch(err => {

@@ -11,7 +11,9 @@ const crypto = require("crypto"); //Default Node JS package; used to generate to
 // const sendEMail = require("../helpers/secret-data/personal-email");
 const Validation = require("../helpers/helpers/validation");
 const UserModel = require("../models/UserModel");
-
+const serverSideRecaptchaScript =
+	require("../helpers/gitignores/recaptcha-secret").serverSideRecaptchaScript;
+const fetch = require("node-fetch");
 // const transporter = nodemailer.createTransport(
 // 	sendGridTransport({
 // 		auth: {
@@ -228,13 +230,48 @@ exports.getLoginPage = (req, res, next) => {
 		errorMessage: "",
 	});
 };
-exports.loginUser = (req, res, next) => {
-	// req.session.isLoggedIn = false;
-	const userId = req.body.username;
-	const password = req.body.password;
-	// console.log(req.body);
+exports.loginUser = async (req, res, next) => {
 	const validationError = [];
 	var errorMsg = "";
+	const userId = req.body.username;
+	const password = req.body.password;
+	const recaptchaCode = req.body["g-recaptcha-response"];
+	const secret_key = serverSideRecaptchaScript;
+	let captchaValidation = "";
+	const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${recaptchaCode}`;
+	const googleResponse = await fetch(url, {
+		method: "post",
+	});
+	const google_response = await googleResponse.json();
+
+	if (!google_response.success) {
+		// If google_response.success is false
+		validationError.push("Invalid Captcha.");
+	}
+
+	// 	.then(response => response.json())
+	// 	.then(google_response => {
+	// 		// google_response is the object return by
+	// 		// google as a response
+	// 		if (google_response.success == true) {
+	// 			//   if captcha is verified
+	// 			return { response: "success", message: "Passed" };
+	// 		} else {
+	// 			// if captcha is not verified
+	// 			return { response: "fail", message: "Failed" };
+	// 		}
+	// 	})
+	// 	.then(response => {
+	// 		captchaValidation = response;
+	// 		// console.log(response);
+	// 		// return;
+	// 	})
+	// 	.catch(error => {
+	// 		// Some error while verify captcha
+	// 		return { response: "fail", message: "Server Error" };
+	// 	});
+	// console.log(captchaValidation);
+
 	if (Validation.blankValidation(userId)) {
 		validationError.push("User Id cannot be blank");
 		//return false;
@@ -336,7 +373,7 @@ exports.logoutUser = (req, res, next) => {
 			error.httpStatusCode = 500;
 			return next(error);
 		}
-		res.redirect("/");
+		res.redirect("/users/login");
 	});
 };
 
