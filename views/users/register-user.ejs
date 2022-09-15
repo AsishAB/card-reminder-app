@@ -79,12 +79,19 @@
                         <label class="form-label" for="confirm_password">Repeat your password</label>
                       </div>
                     </div>
-  
+                     <div class="d-flex flex-row align-items-center mb-4">
+                      
+                      <div class="form-outline flex-fill mb-0">
+                        <div class="g-recaptcha" data-sitekey="<%= clientSideRecaptcaCode %>">
+                        </div>
+                      </div>
+                    </div>
+                   
                   
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                       <button type="submit" class="btn btn-primary btn-lg">Register</button>
                     </div>
-  
+                   
                   </form>
                 <div class="col-md-6 text-center">
                   <a href="/users/login">Already Registered ? Login Here</a>
@@ -94,10 +101,19 @@
                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
                   <img src="/assets/register/user-registration.jpg" class="img-fluid" alt="Sample image">
                 </div>
-  
-  
-
               </div>
+               <div class="mt-2">
+                  <hr/>
+                  <small class="text-dark">
+                    This site is protected by reCAPTCHA and the
+                    Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and 
+                    <a href="https://policies.google.com/terms">Terms of Service</a> apply. <br>
+                    If you cannot see the 
+                    <img src="/assets/reCAPTCHA-logo@2x.png" height="25" width="25"> 
+                    icon, please wait for the page to load completely. If there is any error in captcha verification, or the captcha expires, please <a href="/users/register">reload the page</a>.
+
+                    </small>
+                </div>
             </div>
           </div>
         </div>
@@ -106,4 +122,9 @@
   </section>
   <div style="margin-top: 75px;"></div>
 <%- include('../layouts/footer.ejs') %>
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<!-- <script src="https://www.google.com/recaptcha/api.js?render=<%= clientSideRecaptcaCode %>"></script> -->
+
+
 <%- include('../layouts/end-tag.ejs') %>

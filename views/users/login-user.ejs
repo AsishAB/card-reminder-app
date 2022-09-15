@@ -53,21 +53,7 @@
               <p class="">Don't have an account? <a href="/users/register" class="text-white-50 fw-bold"> <i class="fa-solid fa-share-from-square"></i> Sign Up </a>
               </p>
             </div>
-            
-            <div class="mt-2">
-              <hr/>
-              <small class="text-secondary">
-                This site is protected by reCAPTCHA and the
-                Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and 
-                <a href="https://policies.google.com/terms">Terms of Service</a> apply. <br>
-                If you cannot see the 
-                <img src="/assets/reCAPTCHA-logo@2x.png" height="25" width="25"> 
-                icon, please wait for the page to load completely. If there is any error in captcha verification, or the captcha expires, please <a href="/users/login">reload the page</a>.
-
-                </small>
-              </div>
-
-                    
+                  
           </div>
         </div>
       </div>
@@ -76,13 +62,6 @@
 </section> 
 
 <%- include('../layouts/footer.ejs') %>
- <script src="https://www.google.com/recaptcha/api.js"></script>
-<!-- <script src="https://www.google.com/recaptcha/api.js?render=<%= clientSideRecaptcaCode %>"></script> -->
-
-<script>
-  function onSubmit(token) {
-      document.getElementById("loginForm").submit();
-  }
-</script>
+ 
 
 <%- include('../layouts/end-tag.ejs') %>

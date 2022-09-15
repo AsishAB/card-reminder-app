@@ -63,7 +63,7 @@ exports.getRegisterPageForAdmin = async (req, res, next) => {
 		},
 	});
 };
-exports.registerUser = (req, res, next) => {
+exports.registerUser = async (req, res, next) => {
 	//console.log(req.body);
 	const firstName = req.body.firstName;
 	const lastName = req.body.lastName;
@@ -75,6 +75,19 @@ exports.registerUser = (req, res, next) => {
 	const validationError = [];
 	var errorMsg = "";
 
+	const recaptchaCode = req.body["g-recaptcha-response"];
+	const secret_key = serverSideRecaptchaScript;
+	let captchaValidation = "";
+	const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${recaptchaCode}`;
+	const googleResponse = await fetch(url, {
+		method: "post",
+	});
+	const google_response = await googleResponse.json();
+
+	if (!google_response.success) {
+		// If google_response.success is false
+		validationError.push("Invalid Captcha.");
+	}
 	if (Validation.blankValidation(firstName)) {
 		validationError.push("First name cannot be blank");
 		//return false;
@@ -235,42 +248,6 @@ exports.loginUser = async (req, res, next) => {
 	var errorMsg = "";
 	const userId = req.body.username;
 	const password = req.body.password;
-	const recaptchaCode = req.body["g-recaptcha-response"];
-	const secret_key = serverSideRecaptchaScript;
-	let captchaValidation = "";
-	const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${recaptchaCode}`;
-	const googleResponse = await fetch(url, {
-		method: "post",
-	});
-	const google_response = await googleResponse.json();
-
-	if (!google_response.success) {
-		// If google_response.success is false
-		validationError.push("Invalid Captcha.");
-	}
-
-	// 	.then(response => response.json())
-	// 	.then(google_response => {
-	// 		// google_response is the object return by
-	// 		// google as a response
-	// 		if (google_response.success == true) {
-	// 			//   if captcha is verified
-	// 			return { response: "success", message: "Passed" };
-	// 		} else {
-	// 			// if captcha is not verified
-	// 			return { response: "fail", message: "Failed" };
-	// 		}
-	// 	})
-	// 	.then(response => {
-	// 		captchaValidation = response;
-	// 		// console.log(response);
-	// 		// return;
-	// 	})
-	// 	.catch(error => {
-	// 		// Some error while verify captcha
-	// 		return { response: "fail", message: "Server Error" };
-	// 	});
-	// console.log(captchaValidation);
 
 	if (Validation.blankValidation(userId)) {
 		validationError.push("User Id cannot be blank");
